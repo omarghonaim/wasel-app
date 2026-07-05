@@ -55,6 +55,10 @@ class CartController extends Controller
         $item = $request->model === 'Item' ? Item::find($request->item_id) : ItemCampaign::find($request->item_id);
 
 
+        if(!$item) {
+            return response()->json(['errors' => [['code' => 'item', 'message' => translate('messages.item_not_found')]]], 404);
+        }
+
         $cart = Cart::where('item_id',$request->item_id)->where('item_type',$model)->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->first();
 
         if ($cart && json_decode($cart->variation, true) == $request->variation) {

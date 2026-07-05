@@ -1075,7 +1075,7 @@ trait PlaceNewOrder
                         $product_data[] = [
                             'item' => clone $product,
                             'quantity' => $c['quantity'],
-                            'variant' => count($c['variation']) > 0 ? $c['variation'][0]['type'] : null
+                            'variant' => count($c['variation']) > 0 ? ($c['variation'][0]['type'] ?? $c['variation'][0]['values']['label'] ?? null) : null
                         ];
                     }
                 }
