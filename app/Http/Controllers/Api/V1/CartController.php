@@ -30,9 +30,18 @@ class CartController extends Controller
             $data->variation = json_decode($data->variation,true);
 			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
             $data->add_on_qtys, false, app()->getLocale());
+			$data->price_breakdown = Helpers::cart_price_breakdown($data, $data->item);
 			return $data;
 		});
-        return response()->json($carts, 200);
+
+        $cart_total = [
+            'base_total' => round($carts->sum(fn($c) => $c->price_breakdown['base_total']), 3),
+            'variations_total' => round($carts->sum(fn($c) => $c->price_breakdown['variations_total']), 3),
+            'addons_total' => round($carts->sum(fn($c) => $c->price_breakdown['addons_total']), 3),
+            'subtotal' => round($carts->sum(fn($c) => $c->price_breakdown['line_total']), 3),
+        ];
+
+        return response()->json(['carts' => $carts, 'cart_total' => $cart_total], 200);
     }
 
     public function add_to_cart(Request $request)

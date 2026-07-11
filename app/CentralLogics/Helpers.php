@@ -1068,6 +1068,55 @@ class Helpers
         return $data;
     }
 
+    public static function cart_price_breakdown($cart, $item)
+    {
+        $quantity = (int) $cart['quantity'];
+        $base_price = (float) ($item['price'] ?? 0);
+        $unit_price = (float) $cart['price'];
+        $variations_total_unit = max($unit_price - $base_price, 0);
+
+        $addon_total = 0;
+        foreach (($item['addons'] ?? []) as $addon) {
+            if (!empty($addon['isChecked'])) {
+                $addon_total += (float) ($addon['price'] ?? 0) * (int) ($addon['quantity'] ?? 1);
+            }
+        }
+
+        return [
+            'base_total' => round($base_price * $quantity, 3),
+            'variations_total' => round($variations_total_unit * $quantity, 3),
+            'addons_total' => round($addon_total, 3),
+            'line_total' => round($unit_price * $quantity + $addon_total, 3),
+        ];
+    }
+
+    public static function order_price_breakdown($order)
+    {
+        $details = $order->details ?? collect();
+        $item_total = 0;
+        $variations_total = 0;
+        $item_discount = 0;
+        foreach ($details as $detail) {
+            $item_total += $detail['price'] * $detail['quantity'];
+            $variations_total += (float) ($detail['total_add_on_price'] ?? 0);
+            $item_discount += (float) ($detail['discount_on_item'] ?? 0) + (float) ($detail['addon_discount'] ?? 0);
+        }
+
+        return [
+            'item_total' => round($item_total, 3),
+            'variations_total' => round($variations_total, 3),
+            'item_discount' => round($item_discount, 3),
+            'coupon_discount' => (float) ($order->coupon_discount_amount ?? 0),
+            'coupon_code' => $order->coupon_code,
+            'delivery_fee' => (float) ($order->delivery_charge ?? 0),
+            'tax' => (float) ($order->total_tax_amount ?? 0),
+            'tax_percentage' => (float) ($order->tax_percentage ?? 0),
+            'additional_charge' => (float) ($order->additional_charge ?? 0),
+            'tips' => (float) ($order->dm_tips ?? 0),
+            'grand_total' => (float) ($order->order_amount ?? 0),
+        ];
+    }
+
     public static function deliverymen_list_formatting($data)
     {
         $storage = [];
