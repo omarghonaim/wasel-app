@@ -1068,12 +1068,33 @@ class Helpers
         return $data;
     }
 
-    public static function cart_price_breakdown($cart, $item, $discount = null)
+    public static function cart_variation_price($raw_item, $selected_variation)
+    {
+        if (empty($selected_variation)) {
+            return 0.0;
+        }
+        if ($raw_item->module?->module_type == 'food') {
+            $food_variations = is_array($raw_item->food_variations) ? $raw_item->food_variations : (json_decode($raw_item->food_variations, true) ?? []);
+            if (empty($food_variations)) {
+                return 0.0;
+            }
+            $variation_data = self::get_varient($food_variations, $selected_variation);
+            return (float) ($variation_data['price'] ?? 0);
+        }
+
+        $item_variations = is_array($raw_item->variations) ? $raw_item->variations : (json_decode($raw_item->variations, true) ?? []);
+        if (empty($item_variations)) {
+            return 0.0;
+        }
+        $variant_data = self::variation_price($raw_item, json_encode($selected_variation));
+        return (float) ($variant_data['price'] ?? 0);
+    }
+
+    public static function cart_price_breakdown($cart, $raw_item, $item, $store)
     {
         $quantity = (int) $cart['quantity'];
-        $base_price = (float) ($item['price'] ?? 0);
-        $unit_price = (float) $cart['price'];
-        $variations_total_unit = max($unit_price - $base_price, 0);
+        $base_price = (float) ($raw_item->price ?? 0);
+        $variation_price_unit = self::cart_variation_price($raw_item, $cart['variation'] ?? []);
 
         $addon_total = 0;
         foreach (($item['addons'] ?? []) as $addon) {
@@ -1082,16 +1103,24 @@ class Helpers
             }
         }
 
+        $discount_base_unit = $base_price + $variation_price_unit;
+        $discount = ($raw_item && $store) ? self::product_discount_calculate($raw_item, $discount_base_unit, $store) : null;
         $discount_unit = (float) ($discount['discount_amount'] ?? 0);
-        $discount_total = round($discount_unit * $quantity, 3);
+        $discount_total = round($discount_unit * $quantity, 2);
+
+        $base_total = round($base_price * $quantity, 2);
+        $variations_total = round($variation_price_unit * $quantity, 2);
+        $addons_total = round($addon_total, 2);
+        $items_subtotal = round(max($base_total + $variations_total + $addons_total - $discount_total, 0), 2);
 
         return [
-            'base_total' => round($base_price * $quantity, 3),
-            'variations_total' => round($variations_total_unit * $quantity, 3),
-            'addons_total' => round($addon_total, 3),
+            'base_total' => $base_total,
+            'variations_total' => $variations_total,
+            'addons_total' => $addons_total,
             'item_discount' => $discount_total,
             'item_discount_type' => $discount['discount_type'] ?? null,
-            'line_total' => round(max($unit_price * $quantity + $addon_total - $discount_total, 0), 3),
+            'items_subtotal' => $items_subtotal,
+            '_raw_discount' => $discount,
         ];
     }
 
@@ -1622,6 +1651,9 @@ class Helpers
             $store_discount = self::get_store_discount($store);
             if (isset($store_discount)) {
                 $store_price_discount = ($price / 100) * $store_discount['discount'];
+                if ($store_discount['max_discount'] > 0) {
+                    $store_price_discount = min($store_price_discount, $store_discount['max_discount']);
+                }
                 $store_discount_percentage = $store_discount['discount'];
             }
         }

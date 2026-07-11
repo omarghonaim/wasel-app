@@ -32,74 +32,89 @@ class CartController extends Controller
             $data->add_on_qtys = json_decode($data->add_on_qtys,true);
             $data->variation = json_decode($data->variation,true);
             $raw_item = $data->item;
-            $discount = ($raw_item && $raw_item->store) ? Helpers::product_discount_calculate($raw_item, $data->price, $raw_item->store) : null;
-            if ($raw_item) {
-                $tax_lines[] = ['raw_item' => $raw_item, 'discount' => $discount, 'cart' => $data];
+            $store = $raw_item?->store;
+            $formatted_item = Helpers::cart_product_data_formatting($raw_item, $data->variation, $data->add_on_ids, $data->add_on_qtys, false, app()->getLocale());
+            $price_breakdown = $raw_item ? Helpers::cart_price_breakdown($data, $raw_item, $formatted_item, $store) : null;
+            if ($raw_item && $price_breakdown) {
+                $tax_lines[] = ['raw_item' => $raw_item, 'discount' => $price_breakdown['_raw_discount'], 'cart' => $data];
+                unset($price_breakdown['_raw_discount']);
             }
-			$data->item = Helpers::cart_product_data_formatting($raw_item, $data->variation,$data->add_on_ids,
-            $data->add_on_qtys, false, app()->getLocale());
-			$data->price_breakdown = Helpers::cart_price_breakdown($data, $data->item, $discount);
+			$data->item = $formatted_item;
+			$data->price_breakdown = $price_breakdown;
 			return $data;
 		});
 
         $additional_charge_status = (int) Helpers::get_business_settings('additional_charge_status') ?? 0;
         $additional_charge = $additional_charge_status ? (float) (Helpers::get_business_settings('additional_charge') ?? 0) : 0;
 
-        $subtotal = round($carts->sum(fn($c) => $c->price_breakdown['line_total']), 3);
+        $items_subtotal = round($carts->sum(fn($c) => $c->price_breakdown['items_subtotal'] ?? 0), 2);
 
         $coupon_discount = 0;
         $coupon_code = null;
         $coupon_error = null;
+        $coupon_error_code = null;
+        $free_delivery = false;
         if ($request->filled('coupon_code')) {
             $first_item = $carts->first()->item ?? null;
             $store_id = $first_item['store_id'] ?? null;
             $coupon = Coupon::active()->where(['code' => $request['coupon_code']])->first();
             if (!isset($coupon)) {
+                $coupon_error_code = 'coupon_not_found';
                 $coupon_error = translate('messages.coupon_not_found');
             } elseif (!$store_id) {
+                $coupon_error_code = 'coupon_not_found';
                 $coupon_error = translate('messages.coupon_not_found');
             } else {
                 $status = CouponLogic::is_valide($coupon, $user_id, $store_id);
                 if ($status == 200) {
-                    if ($coupon->coupon_type != 'free_delivery' && $subtotal < $coupon->min_purchase) {
+                    if ($coupon->coupon_type != 'free_delivery' && $items_subtotal < $coupon->min_purchase) {
+                        $coupon_error_code = 'minimum_purchase_required';
                         $coupon_error = translate('messages.minimum_purchase_required');
                     } else {
-                        $coupon_discount = $coupon->coupon_type == 'free_delivery' ? 0 : round(CouponLogic::get_discount($coupon, $subtotal), 3);
+                        $coupon_discount = $coupon->coupon_type == 'free_delivery' ? 0 : round(CouponLogic::get_discount($coupon, $items_subtotal), 2);
+                        $free_delivery = $coupon->coupon_type == 'free_delivery';
                         $coupon_code = $coupon->code;
                     }
                 } elseif ($status == 407) {
+                    $coupon_error_code = 'coupon_expired';
                     $coupon_error = translate('messages.coupon_expire');
                 } elseif ($status == 406) {
+                    $coupon_error_code = 'coupon_usage_limit_over';
                     $coupon_error = translate('messages.coupon_usage_limit_over');
                 } elseif ($status == 408) {
+                    $coupon_error_code = 'not_eligible';
                     $coupon_error = translate('messages.You_are_not_eligible_for_this_coupon');
                 } else {
+                    $coupon_error_code = 'coupon_not_found';
                     $coupon_error = translate('messages.coupon_not_found');
                 }
             }
         }
 
-        $tips = (float) ($request['dm_tips'] ?? 0);
+        $tips = round((float) ($request['dm_tips'] ?? 0), 2);
 
         $tax_store_id = $tax_lines[0]['raw_item']->store_id ?? null;
         $tax_result = Helpers::cart_tax_calculate($tax_lines, $coupon_discount, $tax_store_id);
 
-        $gross_total = round($carts->sum(fn($c) => $c->price_breakdown['line_total']), 3);
-        $final_subtotal = round(max($gross_total - $coupon_discount + $additional_charge + $tips + $tax_result['tax_amount'], 0), 3);
+        $total = round(max($items_subtotal - $coupon_discount + $additional_charge + $tips + $tax_result['tax_amount'], 0), 2);
 
         $cart_total = [
-            'base_total' => round($carts->sum(fn($c) => $c->price_breakdown['base_total']), 3),
-            'variations_total' => round($carts->sum(fn($c) => $c->price_breakdown['variations_total']), 3),
-            'addons_total' => round($carts->sum(fn($c) => $c->price_breakdown['addons_total']), 3),
-            'item_discount' => round($carts->sum(fn($c) => $c->price_breakdown['item_discount']), 3),
+            'base_total' => round($carts->sum(fn($c) => $c->price_breakdown['base_total'] ?? 0), 2),
+            'variations_total' => round($carts->sum(fn($c) => $c->price_breakdown['variations_total'] ?? 0), 2),
+            'addons_total' => round($carts->sum(fn($c) => $c->price_breakdown['addons_total'] ?? 0), 2),
+            'item_discount' => round($carts->sum(fn($c) => $c->price_breakdown['item_discount'] ?? 0), 2),
+            'items_subtotal' => $items_subtotal,
             'coupon_code' => $coupon_code,
             'coupon_discount' => $coupon_discount,
+            'free_delivery' => $free_delivery,
+            'coupon_error_code' => $coupon_error_code,
             'coupon_error' => $coupon_error,
             'tax' => $tax_result['tax_amount'],
             'tax_status' => $tax_result['tax_status'],
-            'additional_charge' => round($additional_charge, 3),
-            'tips' => round($tips, 3),
-            'subtotal' => $final_subtotal,
+            'delivery_fee' => null,
+            'additional_charge' => round($additional_charge, 2),
+            'tips' => $tips,
+            'total' => $total,
         ];
 
         return response()->json(['carts' => $carts, 'cart_total' => $cart_total], 200);
