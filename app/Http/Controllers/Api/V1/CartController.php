@@ -25,13 +25,17 @@ class CartController extends Controller
         }
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
+        $tax_lines = [];
         $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->get()
-        ->map(function ($data) {
+        ->map(function ($data) use (&$tax_lines) {
             $data->add_on_ids = json_decode($data->add_on_ids,true);
             $data->add_on_qtys = json_decode($data->add_on_qtys,true);
             $data->variation = json_decode($data->variation,true);
             $raw_item = $data->item;
             $discount = ($raw_item && $raw_item->store) ? Helpers::product_discount_calculate($raw_item, $data->price, $raw_item->store) : null;
+            if ($raw_item) {
+                $tax_lines[] = ['raw_item' => $raw_item, 'discount' => $discount, 'cart' => $data];
+            }
 			$data->item = Helpers::cart_product_data_formatting($raw_item, $data->variation,$data->add_on_ids,
             $data->add_on_qtys, false, app()->getLocale());
 			$data->price_breakdown = Helpers::cart_price_breakdown($data, $data->item, $discount);
@@ -77,18 +81,25 @@ class CartController extends Controller
 
         $tips = (float) ($request['dm_tips'] ?? 0);
 
+        $tax_store_id = $tax_lines[0]['raw_item']->store_id ?? null;
+        $tax_result = Helpers::cart_tax_calculate($tax_lines, $coupon_discount, $tax_store_id);
+
+        $gross_total = round($carts->sum(fn($c) => $c->price_breakdown['line_total']), 3);
+        $final_subtotal = round(max($gross_total - $coupon_discount + $additional_charge + $tips + $tax_result['tax_amount'], 0), 3);
+
         $cart_total = [
             'base_total' => round($carts->sum(fn($c) => $c->price_breakdown['base_total']), 3),
             'variations_total' => round($carts->sum(fn($c) => $c->price_breakdown['variations_total']), 3),
             'addons_total' => round($carts->sum(fn($c) => $c->price_breakdown['addons_total']), 3),
             'item_discount' => round($carts->sum(fn($c) => $c->price_breakdown['item_discount']), 3),
-            'subtotal' => $subtotal,
             'coupon_code' => $coupon_code,
             'coupon_discount' => $coupon_discount,
             'coupon_error' => $coupon_error,
+            'tax' => $tax_result['tax_amount'],
+            'tax_status' => $tax_result['tax_status'],
             'additional_charge' => round($additional_charge, 3),
             'tips' => round($tips, 3),
-            'estimated_total' => round(max($subtotal - $coupon_discount + $additional_charge + $tips, 0), 3),
+            'subtotal' => $final_subtotal,
         ];
 
         return response()->json(['carts' => $carts, 'cart_total' => $cart_total], 200);

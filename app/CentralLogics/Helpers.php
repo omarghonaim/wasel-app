@@ -1095,6 +1095,50 @@ class Helpers
         ];
     }
 
+    public static function cart_tax_calculate($cart_lines, $coupon_discount, $store_id)
+    {
+        if (!addon_published_status('TaxModule') || empty($cart_lines) || !$store_id) {
+            return ['tax_amount' => 0, 'tax_status' => 'excluded'];
+        }
+
+        $details_data = [];
+        $item_discount_total = 0;
+        foreach ($cart_lines as $line) {
+            $raw_item = $line['raw_item'];
+            $discount = $line['discount'];
+            $unit_price = (float) $line['cart']->price;
+            $quantity = (int) $line['cart']->quantity;
+            $discount_amount_per_unit = (float) ($discount['discount_amount'] ?? 0);
+            $discount_type = $discount['discount_type'] ?? 'product_discount';
+
+            $details_data[] = [
+                'item_id' => $raw_item->id,
+                'item_campaign_id' => null,
+                'price' => $unit_price,
+                'quantity' => $quantity,
+                'category_id' => $raw_item->category_id,
+                'discount_type' => $discount_type,
+                'discount_on_item' => $discount_amount_per_unit,
+                'add_ons' => '[]',
+                'addon_discount' => 0,
+                'total_add_on_price' => 1,
+            ];
+
+            $item_discount_total += $discount_amount_per_unit * $quantity;
+        }
+
+        $gross_price = collect($details_data)->sum(fn($d) => $d['price'] * $d['quantity']);
+        $total_discount = $item_discount_total + $coupon_discount;
+        $net_price = max($gross_price - $total_discount, 0);
+
+        $result = self::getFinalCalculatedTax($details_data, [], $total_discount, $net_price, $store_id, false);
+
+        return [
+            'tax_amount' => round($result['tax_amount'] ?? 0, 3),
+            'tax_status' => $result['tax_status'] ?? 'excluded',
+        ];
+    }
+
     public static function order_price_breakdown($order)
     {
         $details = $order->details ?? collect();
