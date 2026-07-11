@@ -1068,7 +1068,7 @@ class Helpers
         return $data;
     }
 
-    public static function cart_price_breakdown($cart, $item)
+    public static function cart_price_breakdown($cart, $item, $discount = null)
     {
         $quantity = (int) $cart['quantity'];
         $base_price = (float) ($item['price'] ?? 0);
@@ -1082,11 +1082,16 @@ class Helpers
             }
         }
 
+        $discount_unit = (float) ($discount['discount_amount'] ?? 0);
+        $discount_total = round($discount_unit * $quantity, 3);
+
         return [
             'base_total' => round($base_price * $quantity, 3),
             'variations_total' => round($variations_total_unit * $quantity, 3),
             'addons_total' => round($addon_total, 3),
-            'line_total' => round($unit_price * $quantity + $addon_total, 3),
+            'item_discount' => $discount_total,
+            'item_discount_type' => $discount['discount_type'] ?? null,
+            'line_total' => round(max($unit_price * $quantity + $addon_total - $discount_total, 0), 3),
         ];
     }
 

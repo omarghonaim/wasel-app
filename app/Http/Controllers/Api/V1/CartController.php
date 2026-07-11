@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\ItemCampaign;
+use App\Models\Coupon;
+use App\CentralLogics\CouponLogic;
 use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
@@ -28,17 +30,65 @@ class CartController extends Controller
             $data->add_on_ids = json_decode($data->add_on_ids,true);
             $data->add_on_qtys = json_decode($data->add_on_qtys,true);
             $data->variation = json_decode($data->variation,true);
-			$data->item = Helpers::cart_product_data_formatting($data->item, $data->variation,$data->add_on_ids,
+            $raw_item = $data->item;
+            $discount = ($raw_item && $raw_item->store) ? Helpers::product_discount_calculate($raw_item, $data->price, $raw_item->store) : null;
+			$data->item = Helpers::cart_product_data_formatting($raw_item, $data->variation,$data->add_on_ids,
             $data->add_on_qtys, false, app()->getLocale());
-			$data->price_breakdown = Helpers::cart_price_breakdown($data, $data->item);
+			$data->price_breakdown = Helpers::cart_price_breakdown($data, $data->item, $discount);
 			return $data;
 		});
+
+        $additional_charge_status = (int) Helpers::get_business_settings('additional_charge_status') ?? 0;
+        $additional_charge = $additional_charge_status ? (float) (Helpers::get_business_settings('additional_charge') ?? 0) : 0;
+
+        $subtotal = round($carts->sum(fn($c) => $c->price_breakdown['line_total']), 3);
+
+        $coupon_discount = 0;
+        $coupon_code = null;
+        $coupon_error = null;
+        if ($request->filled('coupon_code')) {
+            $first_item = $carts->first()->item ?? null;
+            $store_id = $first_item['store_id'] ?? null;
+            $coupon = Coupon::active()->where(['code' => $request['coupon_code']])->first();
+            if (!isset($coupon)) {
+                $coupon_error = translate('messages.coupon_not_found');
+            } elseif (!$store_id) {
+                $coupon_error = translate('messages.coupon_not_found');
+            } else {
+                $status = CouponLogic::is_valide($coupon, $user_id, $store_id);
+                if ($status == 200) {
+                    if ($coupon->coupon_type != 'free_delivery' && $subtotal < $coupon->min_purchase) {
+                        $coupon_error = translate('messages.minimum_purchase_required');
+                    } else {
+                        $coupon_discount = $coupon->coupon_type == 'free_delivery' ? 0 : round(CouponLogic::get_discount($coupon, $subtotal), 3);
+                        $coupon_code = $coupon->code;
+                    }
+                } elseif ($status == 407) {
+                    $coupon_error = translate('messages.coupon_expire');
+                } elseif ($status == 406) {
+                    $coupon_error = translate('messages.coupon_usage_limit_over');
+                } elseif ($status == 408) {
+                    $coupon_error = translate('messages.You_are_not_eligible_for_this_coupon');
+                } else {
+                    $coupon_error = translate('messages.coupon_not_found');
+                }
+            }
+        }
+
+        $tips = (float) ($request['dm_tips'] ?? 0);
 
         $cart_total = [
             'base_total' => round($carts->sum(fn($c) => $c->price_breakdown['base_total']), 3),
             'variations_total' => round($carts->sum(fn($c) => $c->price_breakdown['variations_total']), 3),
             'addons_total' => round($carts->sum(fn($c) => $c->price_breakdown['addons_total']), 3),
-            'subtotal' => round($carts->sum(fn($c) => $c->price_breakdown['line_total']), 3),
+            'item_discount' => round($carts->sum(fn($c) => $c->price_breakdown['item_discount']), 3),
+            'subtotal' => $subtotal,
+            'coupon_code' => $coupon_code,
+            'coupon_discount' => $coupon_discount,
+            'coupon_error' => $coupon_error,
+            'additional_charge' => round($additional_charge, 3),
+            'tips' => round($tips, 3),
+            'estimated_total' => round(max($subtotal - $coupon_discount + $additional_charge + $tips, 0), 3),
         ];
 
         return response()->json(['carts' => $carts, 'cart_total' => $cart_total], 200);
