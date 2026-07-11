@@ -570,6 +570,7 @@ trait PlaceNewOrder
                 'status' => $order->order_status,
                 'created_at' => $order->created_at,
                 'user_id' => (int) $order->user_id,
+                'price_breakdown' => Helpers::order_price_breakdown($order->load('details')),
             ], 200);
         } catch (\Exception $exception) {
 

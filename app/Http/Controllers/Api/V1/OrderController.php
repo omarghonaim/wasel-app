@@ -65,6 +65,7 @@ class OrderController extends Controller
             $order['min_delivery_time'] =  $order->store ? (int) explode('-', $order->store?->delivery_time)[0] ?? 0 : 0;
             $order['max_delivery_time'] =  $order->store ? (int) explode('-', $order->store?->delivery_time)[1] ?? 0 : 0;
             $order['offline_payment'] =  isset($order->offline_payments) ? Helpers::offline_payment_formater($order->offline_payments) : null;
+            $order['price_breakdown'] = Helpers::order_price_breakdown($order->load('details'));
 
             unset($order['offline_payments']);
             unset($order['details']);
@@ -172,8 +173,10 @@ class OrderController extends Controller
 
         $details = isset($order->details) ? $order->details : null;
         if ($details != null && $details->count() > 0) {
+            $price_breakdown = Helpers::order_price_breakdown($order);
             $details = Helpers::order_details_data_formatting($details);
             $details[0]['is_guest'] = (int)$order->is_guest;
+            $details[0]['price_breakdown'] = $price_breakdown;
             return response()->json($details, 200);
         } else if ($order->order_type == 'parcel' || $order->prescription_order == 1) {
             $order->delivery_address = json_decode($order->delivery_address, true);
