@@ -5,6 +5,7 @@ use App\Http\Controllers\PaytmController;
 use App\Http\Controllers\LiqPayController;
 use App\Http\Controllers\PaymobController;
 use App\Http\Controllers\PaytabsController;
+use App\Http\Controllers\TapController;
 use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\PaystackController;
 use App\Http\Controllers\RazorPayController;
@@ -190,6 +191,13 @@ if (!$is_published) {
             Route::any('pay', [PaytabsController::class, 'payment'])->name('pay');
             Route::any('callback', [PaytabsController::class, 'callback'])->name('callback');
             Route::any('response', [PaytabsController::class, 'response'])->name('response');
+        });
+
+        //TAP
+        Route::group(['prefix' => 'tap', 'as' => 'tap.'], function () {
+            Route::any('pay', [TapController::class, 'payment'])->name('pay');
+            Route::any('callback', [TapController::class, 'callback'])->name('callback');
+            Route::any('response', [TapController::class, 'response'])->name('response');
         });
     });
 }
