@@ -16,6 +16,19 @@ Route::get('force-import-sql', 'InstallController@force_import_sql')->name('forc
 Route::post('system_settings', 'InstallController@system_settings')->name('system_settings');
 Route::post('purchase_code', 'InstallController@purchase_code')->name('purchase.code');
 
+// php artisan serve uses /public as the docroot, but views call asset('public/...').
+// Serve those files so CSS/JS/images load instead of hitting the install fallback.
+Route::get('/public/{path}', function (string $path) {
+    $base = realpath(public_path());
+    $fullPath = realpath(public_path($path));
+
+    if ($base === false || $fullPath === false || !str_starts_with($fullPath, $base) || !is_file($fullPath)) {
+        abort(404);
+    }
+
+    return response()->file($fullPath);
+})->where('path', '.*');
+
 Route::fallback(function () {
     return redirect('/');
 });
