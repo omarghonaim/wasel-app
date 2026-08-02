@@ -144,6 +144,7 @@ trait PlaceNewOrder
             $delivery_charge = data_get($deliveryChargeData, 'delivery_charge', 0);
             $original_delivery_charge = data_get($deliveryChargeData, 'original_delivery_charge', 0);
             $vehicle_id = data_get($deliveryChargeData, 'vehicle_id', null);
+            $distance = data_get($deliveryChargeData, 'distance', 0);
 
             $address = [
                 'contact_person_name' => $request->contact_person_name ? $request->contact_person_name : ($request->user ? $request->user->f_name . ' ' . $request->user->l_name : ''),
@@ -237,7 +238,7 @@ trait PlaceNewOrder
             if (isset($images)) {
                 $order->order_attachment = json_encode($images);
             }
-            $order->distance = $request->distance;
+            $order->distance = $distance;
             $order->created_at = now();
             $order->updated_at = now();
             $order->charge_payer = $request->charge_payer;
@@ -707,6 +708,33 @@ trait PlaceNewOrder
         return null;
     }
 
+    /**
+     * Great-circle distance between two lat/lng points, in kilometres.
+     * Used instead of the client-supplied `distance` so delivery pricing
+     * can't be manipulated by the app (e.g. sending distance=0).
+     */
+    private function calculateDistanceInKm($lat1, $lon1, $lat2, $lon2): float
+    {
+        if (!$lat1 || !$lon1 || !$lat2 || !$lon2) {
+            return 0;
+        }
+
+        $earthRadiusKm = 6371;
+
+        $lat1 = deg2rad((float) $lat1);
+        $lon1 = deg2rad((float) $lon1);
+        $lat2 = deg2rad((float) $lat2);
+        $lon2 = deg2rad((float) $lon2);
+
+        $latDelta = $lat2 - $lat1;
+        $lonDelta = $lon2 - $lon1;
+
+        $a = sin($latDelta / 2) ** 2 + cos($lat1) * cos($lat2) * sin($lonDelta / 2) ** 2;
+        $c = 2 * asin(min(1, sqrt($a)));
+
+        return $earthRadiusKm * $c;
+    }
+
     private function getVehicleExtraCharge($distance)
     {
         $data =  DMVehicle::active()->where(function ($query) use ($distance) {
@@ -874,7 +902,25 @@ trait PlaceNewOrder
         if ($surge['price'] > 0) {
             $increased = $surge['price'];
         }
-        $vehicleExtraCharge = $this->getVehicleExtraCharge($request->distance ?? 0);
+
+        if ($request->order_type === 'parcel') {
+            $receiverDetails = json_decode($request->receiver_details, true);
+            $distance = $this->calculateDistanceInKm(
+                $request->latitude,
+                $request->longitude,
+                data_get($receiverDetails, 'latitude'),
+                data_get($receiverDetails, 'longitude')
+            );
+        } else {
+            $distance = $this->calculateDistanceInKm(
+                $store?->latitude,
+                $store?->longitude,
+                $request->latitude,
+                $request->longitude
+            );
+        }
+
+        $vehicleExtraCharge = $this->getVehicleExtraCharge($distance);
         $extra_charges = $vehicleExtraCharge['extraCharge'];
         $vehicle_id = $vehicleExtraCharge['vehicle_id'];
 
@@ -885,6 +931,7 @@ trait PlaceNewOrder
                     'vehicle_id' => null,
                     'original_delivery_charge' => 0,
                     'delivery_charge' => 0,
+                    'distance' => $distance,
                 ];
             }
 
@@ -907,10 +954,11 @@ trait PlaceNewOrder
                     'vehicle_id' => null,
                     'original_delivery_charge' => 0,
                     'delivery_charge' => $delivery_charge,
+                    'distance' => $distance,
                 ];
             }
 
-            $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge  : $minimum_shipping_charge;
+            $original_delivery_charge = (($distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? $distance * $per_km_shipping_charge  : $minimum_shipping_charge;
             if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $original_delivery_charge >  $maximum_shipping_charge) {
                 $original_delivery_charge = $maximum_shipping_charge;
             } else {
@@ -918,7 +966,7 @@ trait PlaceNewOrder
             }
 
             if (!isset($delivery_charge)) {
-                $delivery_charge = ($request->distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $request->distance * $per_km_shipping_charge : $minimum_shipping_charge;
+                $delivery_charge = ($distance * $per_km_shipping_charge > $minimum_shipping_charge) ? $distance * $per_km_shipping_charge : $minimum_shipping_charge;
                 if ($maximum_shipping_charge  >= $minimum_shipping_charge  && $delivery_charge >  $maximum_shipping_charge) {
                     $delivery_charge = $maximum_shipping_charge;
                 } else {
@@ -942,7 +990,7 @@ trait PlaceNewOrder
                 $minimum_shipping_charge = (float) ($businessSetting['parcel_minimum_shipping_charge'] ?? 0);
             }
 
-            $original_delivery_charge = (($request->distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? ($request->distance * $per_km_shipping_charge) + $extra_charges : ($minimum_shipping_charge + $extra_charges);
+            $original_delivery_charge = (($distance * $per_km_shipping_charge) > $minimum_shipping_charge) ? ($distance * $per_km_shipping_charge) + $extra_charges : ($minimum_shipping_charge + $extra_charges);
         }
 
         if ($increased > 0) {
@@ -966,6 +1014,7 @@ trait PlaceNewOrder
             'delivery_charge' => $delivery_charge,
             'original_delivery_charge' => $original_delivery_charge ?? 0,
             'vehicle_id' => $vehicle_id ?? null,
+            'distance' => $distance,
         ];
     }
 
