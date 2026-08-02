@@ -455,13 +455,13 @@ class OrderController extends Controller
                         'errors' => [
                             ['code' => 'coupon', 'message' => translate('messages.coupon_expire')]
                         ]
-                    ], 407);
+                    ], 403);
                 } else if ($staus == 406) {
                     return response()->json([
                         'errors' => [
                             ['code' => 'coupon', 'message' => translate('messages.coupon_usage_limit_over')]
                         ]
-                    ], 406);
+                    ], 403);
                 } else if ($staus == 404) {
                     return response()->json([
                         'errors' => [
