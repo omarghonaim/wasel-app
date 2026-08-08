@@ -1,4 +1,7 @@
 import { Hero } from '@/components/Hero';
+import { WhyChoose } from '@/components/WhyChooseSection';
+import { BrandsSection } from '@/components/BrandsSection';
+import { CategoriesSection } from '@/components/CategoriesSection';
 import { useSettings } from '@/hooks/useSettings';
 import type { HeroSliderItem } from '@/types/settings';
 
@@ -40,9 +43,11 @@ export function Home() {
         onWhyUs={handleWhyUs}
       />
 
+      <WhyChoose />
+      <BrandsSection />
+      <CategoriesSection />
+
       {/* Anchors for header links until later sections are built */}
-      <section id="about" className="sr-only" aria-hidden="true" />
-      <section id="products" className="sr-only" aria-hidden="true" />
       <section id="blog" className="sr-only" aria-hidden="true" />
       <section id="contact" className="sr-only" aria-hidden="true" />
     </main>
