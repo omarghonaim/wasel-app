@@ -1,0 +1,10 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Local env (keep .env.example)
+.env
+.env.local
+.env.*.local
