@@ -23,3 +23,12 @@ Thumbs.db
 /public/css
 /public/js
 /mix-manifest.json
+
+# Standalone React landing (Vite)
+/react-landing/node_modules/
+/react-landing/dist/
+/react-landing/.env
+/react-landing/.env.local
+/react-landing/.env.*.local
+
+# Note: public/react-landing/ is the built output served at `/` — keep it deployable

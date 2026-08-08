@@ -37,7 +37,19 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Serve the React landing build at the site root (no redirect).
+        // Built by: cd react-landing && npm run build → public/react-landing/
+        $reactLanding = public_path('react-landing/index.html');
+        if (File::exists($reactLanding)) {
+            return response(
+                File::get($reactLanding),
+                200,
+                ['Content-Type' => 'text/html; charset=UTF-8']
+            );
+        }
+
         $datas =  DataSetting::with('translations', 'storage')->where('type', 'admin_landing_page')->get();
+
         $data = [];
         foreach ($datas as $key => $value) {
             if (count($value->translations) > 0) {
