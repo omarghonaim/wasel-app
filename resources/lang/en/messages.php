@@ -9087,4 +9087,5 @@ Smartly or Earn. ',
   'coupon_usage_limit_over' => 'Coupon usage limit exceeded',
   'You_are_not_eligible_for_this_coupon' => 'You are not eligible for this coupon',
   'minimum_purchase_required' => 'Minimum purchase amount not reached for this coupon',
+  'digital_payment_for_the_order_not_available_at_this_time' => 'Digital payment for the order not available at this time',
 );
