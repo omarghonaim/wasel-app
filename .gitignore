@@ -8,6 +8,7 @@
 # Laravel Specific
 /public/hot
 /public/storage
+/public/public
 /storage/*.key
 
 # Development Tools

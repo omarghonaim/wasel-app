@@ -29,6 +29,47 @@ use Illuminate\Support\Facades\Http;
 |
 */
 
+// Views use asset('public/assets/...'), which only resolves when the
+// document root is the project root. With php artisan serve / public
+// as docroot, map /public/* back to real files under public/.
+Route::get('/public/{path}', function (string $path) {
+    $base = realpath(public_path());
+    if ($base === false) {
+        abort(404);
+    }
+
+    $full = realpath($base . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path));
+    if ($full === false || !str_starts_with($full, $base . DIRECTORY_SEPARATOR) || !is_file($full)) {
+        abort(404);
+    }
+
+    $extension = strtolower(pathinfo($full, PATHINFO_EXTENSION));
+    $mimeTypes = [
+        'css' => 'text/css',
+        'js' => 'application/javascript',
+        'mjs' => 'application/javascript',
+        'json' => 'application/json',
+        'map' => 'application/json',
+        'svg' => 'image/svg+xml',
+        'png' => 'image/png',
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'ico' => 'image/x-icon',
+        'woff' => 'font/woff',
+        'woff2' => 'font/woff2',
+        'ttf' => 'font/ttf',
+        'otf' => 'font/otf',
+        'eot' => 'application/vnd.ms-fontobject',
+        'html' => 'text/html',
+        'txt' => 'text/plain',
+    ];
+
+    return response()->file($full, [
+        'Content-Type' => $mimeTypes[$extension] ?? 'application/octet-stream',
+    ]);
+})->where('path', '.*');
 
 Route::post('/subscribeToTopic', [FirebaseController::class, 'subscribeToTopic']);
 Route::get('/', 'HomeController@index')->name('home');
