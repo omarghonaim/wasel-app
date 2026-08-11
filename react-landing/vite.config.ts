@@ -80,6 +80,7 @@ export default defineConfig(({ command }) => ({
   },
   build: {
     outDir: path.resolve(rootDir, '../public/react-landing'),
-    emptyOutDir: true,
+    // Avoid EPERM on Windows when Laravel/browser holds files in assets/.
+    emptyOutDir: false,
   },
 }));
