@@ -2,8 +2,8 @@ import { Hero } from '@/components/Hero';
 import { WhyChoose } from '@/components/WhyChooseSection';
 import { BrandsSection } from '@/components/BrandsSection';
 import { CategoriesSection } from '@/components/CategoriesSection';
-import { useSettings } from '@/hooks/useSettings';
-import type { HeroSliderItem } from '@/types/settings';
+import { JoinUsSection } from '@/components/JoinUsSection';
+import type { HeroSliderItem, SiteSettings } from '@/types/settings';
 
 /**
  * Placeholder slider content until backend landing data is wired.
@@ -17,8 +17,7 @@ const DEFAULT_SLIDER_ITEMS: HeroSliderItem[] = [
   { id: 'local-support', label: 'Local Support' },
 ];
 
-export function Home() {
-  const { settings } = useSettings();
+export function Home({ settings }: { settings: SiteSettings | null }) {
 
   const handleDownloadApp = () => {
     const android = settings?.appUrlAndroid;
@@ -46,6 +45,7 @@ export function Home() {
       <WhyChoose />
       <BrandsSection />
       <CategoriesSection />
+      <JoinUsSection />
 
       {/* Anchors for header links until later sections are built */}
       <section id="blog" className="sr-only" aria-hidden="true" />
