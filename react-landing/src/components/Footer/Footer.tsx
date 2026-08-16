@@ -37,6 +37,8 @@ export type FooterProps = {
   appUrlIos?: string | null;
   appUrlAndroid?: string | null;
   socialLinks?: SocialLinksConfig;
+  /** Homepage keeps the patterned top strip; About omits it under the stats. */
+  showTopPattern?: boolean;
 };
 
 export function Footer({
@@ -45,6 +47,7 @@ export function Footer({
   appUrlIos,
   appUrlAndroid,
   socialLinks,
+  showTopPattern = true,
 }: FooterProps) {
   const reduceMotion = useReducedMotion();
   const brand = businessName || 'Wasel';
@@ -52,16 +55,18 @@ export function Footer({
 
   return (
     <footer className="w-full text-white" style={{ backgroundColor: FOOTER_BG }}>
-      <div
-        aria-hidden="true"
-        className="h-11 w-full opacity-[0.22] sm:h-12 md:h-14"
-        style={{
-          backgroundImage: `url(${PATTERN_URL})`,
-          backgroundSize: 'auto 100%',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'repeat-x',
-        }}
-      />
+      {showTopPattern ? (
+        <div
+          aria-hidden="true"
+          className="h-11 w-full opacity-[0.22] sm:h-12 md:h-14"
+          style={{
+            backgroundImage: `url(${PATTERN_URL})`,
+            backgroundSize: 'auto 100%',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'repeat-x',
+          }}
+        />
+      ) : null}
 
       <motion.div
         initial={reduceMotion ? false : 'hidden'}
@@ -75,7 +80,7 @@ export function Footer({
             variants={reduceMotion ? undefined : fadeUpItem}
             className="flex flex-col items-center text-center md:items-start md:text-left"
           >
-            <a href="#top" className="inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70">
+            <a href="/#top" className="inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/70">
               {logo ? (
                 <img
                   src={logo}

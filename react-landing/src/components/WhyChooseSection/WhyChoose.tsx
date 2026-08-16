@@ -106,7 +106,7 @@ export function WhyChoose() {
 
   return (
     <section
-      id="about"
+      id="why-choose"
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}

@@ -29,7 +29,7 @@ export function Home({ settings }: { settings: SiteSettings | null }) {
   };
 
   const handleWhyUs = () => {
-    document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('why-choose')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (

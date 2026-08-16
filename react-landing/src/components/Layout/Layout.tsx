@@ -5,9 +5,14 @@ import type { SiteSettings } from '@/types/settings';
 type LayoutProps = {
   children: ReactNode;
   settings: SiteSettings | null;
+  showFooterTopPattern?: boolean;
 };
 
-export function Layout({ children, settings }: LayoutProps) {
+export function Layout({
+  children,
+  settings,
+  showFooterTopPattern = true,
+}: LayoutProps) {
   return (
     <>
       {children}
@@ -16,6 +21,7 @@ export function Layout({ children, settings }: LayoutProps) {
         businessName={settings?.businessName}
         appUrlIos={settings?.appUrlIos}
         appUrlAndroid={settings?.appUrlAndroid}
+        showTopPattern={showFooterTopPattern}
       />
     </>
   );

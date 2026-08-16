@@ -1,0 +1,246 @@
+.section {
+  --about-story-title: #740d20;
+  --about-story-ink: #1a1a1a;
+  --about-story-muted: #6b7280;
+  --about-story-label: #9ca3af;
+  --about-story-bg: #ffffff;
+
+  width: 100%;
+  overflow: hidden;
+  background: var(--about-story-bg);
+  color: var(--about-story-ink);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: var(--max-width-site, 1440px);
+  margin-inline: auto;
+  padding: 3.5rem 1.25rem 4rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.label {
+  margin: 0;
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--about-story-label);
+}
+
+.heading {
+  margin: 0.85rem 0 0;
+  max-width: 18ch;
+  font-family: var(--font-display, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 800;
+  font-size: clamp(1.85rem, 6.5vw, 2.35rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--about-story-ink);
+}
+
+.description {
+  margin: 1.15rem 0 0;
+  max-width: 34rem;
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 300;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--about-story-muted);
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.featureIcon {
+  flex-shrink: 0;
+  width: 65px;
+  height: 65px;
+  opacity: 0;
+  transform: translateX(-40px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease;
+  will-change: transform, opacity;
+}
+
+.featureIconVisible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.featureIconDelay0 {
+  transition-delay: 0ms;
+}
+
+.featureIconDelay1 {
+  transition-delay: 180ms;
+}
+
+.featureIconDelay2 {
+  transition-delay: 360ms;
+}
+
+.featureIconImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.featureText {
+  min-width: 0;
+  padding-top: 0.15rem;
+}
+
+.featureTitle {
+  margin: 0;
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--about-story-title);
+}
+
+.featureDescription {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--about-story-muted);
+}
+
+.media {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  width: 100%;
+}
+
+.imageFloat {
+  display: block;
+  width: min(100%, 34rem);
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  animation: aboutStoryFloat 5s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes aboutStoryFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@media (min-width: 768px) {
+  .inner {
+    gap: 2.75rem;
+    padding: 4.5rem 2rem 5rem;
+  }
+
+  .heading {
+    font-size: clamp(2.25rem, 4vw, 2.85rem);
+  }
+
+  .description {
+    font-size: 18px;
+    line-height: 30.6px;
+  }
+
+  .features {
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .featureTitle {
+    font-size: 1.05rem;
+  }
+
+  .imageFloat {
+    width: min(100%, 30rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 3rem;
+    padding: 5.5rem 2.5rem 6rem;
+  }
+
+  .heading {
+    font-size: clamp(2.6rem, 3.2vw, 3.25rem);
+    max-width: 12ch;
+  }
+
+  .description {
+    max-width: 32rem;
+  }
+
+  .media {
+    justify-content: flex-end;
+  }
+
+  .imageFloat {
+    width: min(100%, 36rem);
+  }
+}
+
+@media (min-width: 1280px) {
+  .inner {
+    gap: 4rem;
+  }
+
+  .imageFloat {
+    width: min(100%, 40rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imageFloat {
+    animation: none;
+    will-change: auto;
+  }
+
+  .featureIcon {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+}

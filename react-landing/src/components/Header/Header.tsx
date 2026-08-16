@@ -3,19 +3,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/Button';
 
 const NAV_LINKS = [
-  { label: 'About Us', href: '#about' },
-  { label: 'Product & Service', href: '#products' },
-  { label: 'The Blog', href: '#blog' },
-  { label: 'Contact Us', href: '#contact' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Product & Service', href: '/#products' },
+  { label: 'The Blog', href: '/#blog' },
+  { label: 'Contact Us', href: '/#contact' },
 ] as const;
 
 type HeaderProps = {
   logo: string | null;
   businessName?: string | null;
   onDownloadApp?: () => void;
+  activeHref?: string;
 };
 
-export function Header({ logo, businessName, onDownloadApp }: HeaderProps) {
+export function Header({
+  logo,
+  businessName,
+  onDownloadApp,
+  activeHref,
+}: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const brand = businessName || 'Wasel';
 
@@ -27,7 +33,7 @@ export function Header({ logo, businessName, onDownloadApp }: HeaderProps) {
       className="absolute inset-x-0 top-0 z-30"
     >
       <div className="mx-auto flex h-20 w-full max-w-site items-center justify-between gap-4 px-5 md:px-8 lg:px-10">
-        <a href="#top" className="relative z-40 flex items-center gap-3">
+        <a href="/#top" className="relative z-40 flex items-center gap-3">
           {logo ? (
             <img
               src={logo}
@@ -45,15 +51,26 @@ export function Header({ logo, businessName, onDownloadApp }: HeaderProps) {
           className="hidden items-center gap-8 lg:flex"
           aria-label="Primary"
         >
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-surface/95 transition-colors duration-200 hover:text-white"
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) => {
+            const isActive = activeHref === link.href;
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? 'page' : undefined}
+                className={[
+                  'text-sm font-medium text-surface/95 transition-colors duration-200 hover:text-white',
+                  isActive
+                    ? 'underline decoration-white decoration-1 underline-offset-[6px]'
+                    : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
+              >
+                {link.label}
+              </a>
+            );
+          })}
         </nav>
 
         <div className="hidden lg:block">
@@ -105,16 +122,27 @@ export function Header({ logo, businessName, onDownloadApp }: HeaderProps) {
             className="absolute inset-x-0 top-20 border-t border-white/10 bg-black/85 px-5 py-6 backdrop-blur-md lg:hidden"
           >
             <nav className="mx-auto flex max-w-site flex-col gap-4" aria-label="Mobile">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="py-1 text-base font-medium text-surface"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {link.label}
-                </a>
-              ))}
+              {NAV_LINKS.map((link) => {
+                const isActive = activeHref === link.href;
+                return (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={[
+                      'py-1 text-base font-medium text-surface',
+                      isActive
+                        ? 'underline decoration-white decoration-1 underline-offset-[6px]'
+                        : '',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
               <Button
                 variant="primary"
                 fullWidth

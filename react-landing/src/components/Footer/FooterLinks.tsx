@@ -50,19 +50,19 @@ export const FooterLinks = memo(function FooterLinks({
 });
 
 export const COMPANY_LINKS: readonly FooterLinkItem[] = [
-  { label: 'About Us', href: '#about' },
-  { label: 'Careers', href: '#careers' },
-  { label: 'Blog', href: '#blog' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Careers', href: '/#careers' },
+  { label: 'Blog', href: '/#blog' },
+  { label: 'Contact', href: '/#contact' },
 ] as const;
 
 export const IMPORTANT_LINKS: readonly FooterLinkItem[] = [
-  { label: 'Partner with Us', href: '#join-us' },
-  { label: 'Become a Driver', href: '#join-us' },
+  { label: 'Partner with Us', href: '/#join-us' },
+  { label: 'Become a Driver', href: '/#join-us' },
 ] as const;
 
 export const LEGAL_LINKS: readonly FooterLinkItem[] = [
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Terms of Service', href: '/terms-and-conditions' },
-  { label: 'Cookies', href: '#cookies' },
+  { label: 'Cookies', href: '/#cookies' },
 ] as const;
