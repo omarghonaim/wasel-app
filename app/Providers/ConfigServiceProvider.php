@@ -48,6 +48,7 @@ class ConfigServiceProvider extends ServiceProvider
                     'from' => ['address' => $emailServices['email_id'], 'name' => $emailServices['name']],
                     'sendmail' => '/usr/sbin/sendmail -bs',
                     'pretend' => false,
+                    'timeout' => 10,
                 ];
                 Config::set('mail', $config);
             }
