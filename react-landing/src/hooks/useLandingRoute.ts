@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export type LandingRoute = 'home' | 'about';
+export type LandingRoute = 'home' | 'about' | 'product-and-service';
 
 function normalizePath(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, '');
@@ -9,7 +9,10 @@ function normalizePath(pathname: string): string {
 
 function readRoute(): LandingRoute {
   if (typeof window === 'undefined') return 'home';
-  return normalizePath(window.location.pathname) === '/about' ? 'about' : 'home';
+  const path = normalizePath(window.location.pathname);
+  if (path === '/about') return 'about';
+  if (path === '/product-and-service') return 'product-and-service';
+  return 'home';
 }
 
 export function useLandingRoute(): { route: LandingRoute } {
@@ -19,6 +22,9 @@ export function useLandingRoute(): { route: LandingRoute } {
     if (window.location.hash === '#about') {
       window.history.replaceState({}, '', '/about');
       setRoute('about');
+    } else if (window.location.hash === '#products') {
+      window.history.replaceState({}, '', '/product-and-service');
+      setRoute('product-and-service');
     }
 
     const onChange = () => setRoute(readRoute());

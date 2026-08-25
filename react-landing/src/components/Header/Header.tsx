@@ -4,7 +4,7 @@ import { Button } from '@/components/Button';
 
 const NAV_LINKS = [
   { label: 'About Us', href: '/about' },
-  { label: 'Product & Service', href: '/#products' },
+  { label: 'Product & Service', href: '/product-and-service' },
   { label: 'The Blog', href: '/#blog' },
   { label: 'Contact Us', href: '/#contact' },
 ] as const;

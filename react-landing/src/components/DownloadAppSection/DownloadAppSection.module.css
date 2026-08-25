@@ -1,0 +1,286 @@
+.section {
+  position: relative;
+  width: 100%;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.whiteBand {
+  width: 100%;
+  height: 3.25rem;
+  background: #ffffff;
+}
+
+.burgundy {
+  --download-burgundy: #740d20;
+  position: relative;
+  isolation: isolate;
+  background-color: var(--download-burgundy);
+  color: #ffffff;
+  /* Compact CTA band — not a tall full-bleed block */
+  min-height: 0;
+}
+
+.pattern {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-repeat: repeat;
+  background-position: center center;
+  background-size: 420px auto;
+  /* Keep pattern very subtle so burgundy stays clean like the design */
+  opacity: 0.12;
+  mix-blend-mode: multiply;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 68rem;
+  margin-inline: auto;
+  padding: 2rem 1.25rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.heading {
+  margin: 0;
+  width: 100%;
+  max-width: 9.5rem;
+  text-align: center;
+  font-family: var(--font-display, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: #ffffff;
+}
+
+.headingLight,
+.headingBold {
+  display: block;
+}
+
+.headingLight {
+  font-weight: 400;
+  font-size: 1.35rem;
+}
+
+.headingBold {
+  margin-top: 0;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.phoneWrap {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 14.5rem);
+  margin-top: -3.75rem;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.phone {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+  /* Asset already includes the counter-clockwise tilt + soft glow */
+  mix-blend-mode: screen;
+}
+
+.download {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qr {
+  display: block;
+  width: 6.25rem;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  border-radius: 0.65rem;
+}
+
+.storeButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.storeLink {
+  display: inline-block;
+  line-height: 0;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.storeLink:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+  border-radius: 0.35rem;
+}
+
+.storeBadge {
+  display: block;
+  width: 8.25rem;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .storeLink:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@media (min-width: 768px) {
+  .whiteBand {
+    height: 3.75rem;
+  }
+
+  .inner {
+    max-width: 64rem;
+    padding: 1.35rem 2rem 1.65rem;
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 0.7fr) minmax(0, 1.15fr) minmax(8rem, 0.7fr);
+    align-items: center;
+    column-gap: 1.25rem;
+    row-gap: 0;
+  }
+
+  .heading {
+    text-align: left;
+    max-width: 9.25rem;
+    justify-self: start;
+  }
+
+  .headingLight {
+    font-size: 1.35rem;
+  }
+
+  .headingBold {
+    font-size: 1.5rem;
+  }
+
+  .phoneWrap {
+    width: min(100%, 17.5rem);
+    margin-top: -5rem;
+    margin-bottom: -1.25rem;
+    justify-self: center;
+  }
+
+  .download {
+    justify-self: end;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .qr {
+    width: 6.5rem;
+  }
+
+  .storeBadge {
+    width: 8.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .whiteBand {
+    height: 4.25rem;
+  }
+
+  .inner {
+    max-width: 70rem;
+    padding: 1.5rem 2.5rem 1.85rem;
+    grid-template-columns: minmax(8rem, 0.75fr) minmax(0, 1.2fr) minmax(9rem, 0.75fr);
+    column-gap: 1.75rem;
+  }
+
+  .heading {
+    max-width: 9.5rem;
+  }
+
+  .headingLight {
+    font-size: 1.45rem;
+  }
+
+  .headingBold {
+    font-size: 1.65rem;
+  }
+
+  .phoneWrap {
+    width: min(100%, 18rem);
+    margin-top: -5.25rem;
+    margin-bottom: -1.35rem;
+  }
+
+  .download {
+    gap: 0.7rem;
+  }
+
+  .qr {
+    width: 6.5rem;
+  }
+
+  .storeButtons {
+    gap: 0.4rem;
+  }
+
+  .storeBadge {
+    width: 8.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .whiteBand {
+    height: 4.25rem;
+  }
+
+  .inner {
+    max-width: 72rem;
+    padding: 1.4rem 2.5rem 1.75rem;
+    column-gap: 2rem;
+  }
+
+  .headingLight {
+    font-size: 1.45rem;
+  }
+
+  .headingBold {
+    font-size: 1.65rem;
+  }
+
+  .phoneWrap {
+    width: min(100%, 19rem);
+    margin-top: -5.5rem;
+    margin-bottom: -1.4rem;
+  }
+
+  .qr {
+    width: 6.75rem;
+  }
+
+  .storeBadge {
+    width: 8.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .storeLink {
+    transition: none;
+  }
+
+  .storeLink:hover {
+    transform: none;
+  }
+}

@@ -74,6 +74,7 @@ Route::get('/public/{path}', function (string $path) {
 Route::post('/subscribeToTopic', [FirebaseController::class, 'subscribeToTopic']);
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('about', 'HomeController@index')->name('landing.about');
+Route::get('product-and-service', 'HomeController@index')->name('landing.product-service');
 Route::get('lang/{locale}', 'HomeController@lang')->name('lang');
 Route::get('terms-and-conditions', 'HomeController@terms_and_conditions')->name('terms-and-conditions');
 Route::get('about-us', 'HomeController@about_us')->name('about-us');

@@ -1,0 +1,308 @@
+.section {
+  position: relative;
+  overflow: hidden;
+  background: #ffffff;
+  color: #0a0a0a;
+}
+
+.inner {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: var(--max-width-site, 1440px);
+  margin-inline: auto;
+  padding: 1rem 1.25rem 0;
+}
+
+/* ─── Product showcase ─── */
+
+.showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logoWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  display: block;
+  height: clamp(1.75rem, 4.5vw, 2.5rem);
+  width: auto;
+  max-width: min(11rem, 50vw);
+  object-fit: contain;
+  object-position: center;
+  opacity: 0.55;
+  filter: grayscale(1);
+}
+
+.showcaseHeading {
+  margin: 0.5rem 0 0;
+  max-width: 22rem;
+  font-family: var(--font-display, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 700;
+  font-size: clamp(1.65rem, 5.5vw, 2.35rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+}
+
+.delivered {
+  font-style: italic;
+  font-weight: 800;
+  color: #740d20;
+}
+
+.phoneWrap {
+  position: relative;
+  z-index: 2;
+  margin-top: 0.5rem;
+  margin-bottom: -1.5rem;
+  width: min(100%, 22rem);
+  display: flex;
+  justify-content: center;
+  line-height: 0;
+}
+
+.phone {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+/* ─── How Wasel Works ─── */
+
+.process {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  background-color: #f8f8f8;
+  margin-top: 0;
+}
+
+.processInner {
+  width: 100%;
+  max-width: var(--max-width-site, 1440px);
+  margin-inline: auto;
+  padding: 2.5rem 1.25rem 2.75rem;
+}
+
+.processHeader {
+  text-align: center;
+  padding-top: 0.5rem;
+}
+
+.processHeading {
+  margin: 0;
+  font-family: var(--font-display, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 700;
+  font-size: clamp(1.55rem, 4vw, 2.15rem);
+  letter-spacing: -0.02em;
+  color: #740d20;
+}
+
+.processSubtitle {
+  margin: 0.35rem auto 0;
+  max-width: 26rem;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: rgba(10, 10, 10, 0.5);
+}
+
+.stepsWrap {
+  position: relative;
+  margin-top: 1.25rem;
+}
+
+.connector {
+  display: none;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.35rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 13.5rem;
+}
+
+.stepIconWrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 9999px;
+  background: #fff;
+  border: 1px solid rgba(116, 13, 32, 0.1);
+  box-shadow: 0 6px 20px rgba(116, 13, 32, 0.08);
+}
+
+.stepIcon {
+  width: 1.85rem;
+  height: 1.85rem;
+  object-fit: contain;
+}
+
+.stepIconDriver {
+  width: 38px;
+  height: 37px;
+}
+
+.stepTitle {
+  margin: 0.55rem 0 0;
+  font-family: var(--font-display, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #740d20;
+}
+
+.stepDescription {
+  margin: 0.2rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: rgba(10, 10, 10, 0.48);
+}
+
+@media (min-width: 640px) {
+  .inner {
+    padding: 1.15rem 2rem 0;
+  }
+
+  .showcaseHeading {
+    max-width: 28rem;
+    margin-top: 0.55rem;
+  }
+
+  .phoneWrap {
+    width: min(100%, 30rem);
+    margin-top: 0.55rem;
+    margin-bottom: -2rem;
+  }
+
+  .processInner {
+    padding: 2.75rem 2rem 3.5rem;
+  }
+
+  .processHeader {
+    padding-top: 0.65rem;
+  }
+
+  .stepsWrap {
+    margin-top: 1.35rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .phoneWrap {
+    width: min(100%, 36rem);
+    margin-bottom: -2.25rem;
+  }
+
+  .steps {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .connector {
+    display: block;
+    position: absolute;
+    z-index: 0;
+    left: 6%;
+    right: 6%;
+    top: 2rem;
+    width: auto;
+    height: 2.5rem;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .stepIconWrap {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .inner {
+    padding: 1.5rem 2.5rem 0;
+  }
+
+  .showcaseHeading {
+    max-width: 34rem;
+    font-size: 2.75rem;
+    margin-top: 0.6rem;
+  }
+
+  .phoneWrap {
+    width: min(100%, 42rem);
+    margin-top: 0.65rem;
+    margin-bottom: -2.75rem;
+  }
+
+  .processInner {
+    padding: 3.25rem 2.5rem 4.5rem;
+  }
+
+  .processHeader {
+    padding-top: 0.75rem;
+  }
+
+  .processHeading {
+    font-size: 2.35rem;
+  }
+
+  .processSubtitle {
+    margin-top: 0.4rem;
+  }
+
+  .stepsWrap {
+    margin-top: 1.5rem;
+    max-width: 58rem;
+    margin-inline: auto;
+  }
+
+  .connector {
+    left: 7%;
+    right: 7%;
+    top: 2.15rem;
+  }
+
+  .step {
+    flex: 1;
+  }
+
+  .stepDescription {
+    max-width: 11.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .phoneWrap {
+    width: min(100%, 46rem);
+    margin-bottom: -3rem;
+  }
+
+  .processInner {
+    padding-top: 3.5rem;
+  }
+}
