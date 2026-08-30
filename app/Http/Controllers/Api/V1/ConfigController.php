@@ -318,6 +318,9 @@ class ConfigController extends Controller
 
             'country' => $settings['country'],
             'default_location' => ['lat' => $default_location ? $default_location['lat'] : '23.757989', 'lng' => $default_location ? $default_location['lng'] : '90.360587'],
+            'map_api_key' => Cache::rememberForever('business_settings_map_api_key_client', function () {
+                return BusinessSetting::where('key', 'map_api_key')->value('value');
+            }),
             'currency_symbol' => $currency_symbol,
             'currency_symbol_direction' => $settings['currency_symbol_position'],
             'app_minimum_version_android' => (float)$settings['app_minimum_version_android'],

@@ -82,6 +82,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
     // Module
     Route::get('module', 'ModuleController@index');
     Route::post('newsletter/subscribe','NewsletterController@index');
+    Route::post('contact/send','ContactController@send');
     Route::get('landing-page', 'ConfigController@landing_page');
     Route::get('react-landing-page', 'ConfigController@react_landing_page')->middleware('actch:react_web');
     Route::get('flutter-landing-page', 'ConfigController@flutter_landing_page');

@@ -1,0 +1,333 @@
+.section {
+  --contact-ink: #111111;
+  --contact-label: #111111;
+  --contact-border: #e5e5e5;
+  --contact-card: #ffffff;
+  --contact-accent: #5a1528;
+  --contact-eyebrow: #c4a574;
+  --contact-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  background: #f3f1ea;
+}
+
+.mapVeil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.headerScrim {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  height: 7.5rem;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.58) 0%,
+    rgba(0, 0, 0, 0.28) 58%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  min-height: 100svh;
+  width: 100%;
+  max-width: var(--max-width-site, 1440px);
+  margin-inline: auto;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 6.75rem 1.25rem 2.25rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 22.75rem;
+  padding: 1.65rem 1.4rem 1.5rem;
+  border-radius: 1.15rem;
+  background: var(--contact-card);
+  box-shadow: 0 18px 50px rgba(20, 12, 16, 0.16);
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 0.68rem;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--contact-eyebrow);
+}
+
+.heading {
+  margin: 0.4rem 0 0;
+  font-family: var(--font-display, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 800;
+  font-size: 1.55rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--contact-ink);
+  text-align: left;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+  margin-top: 1.15rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.label {
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 700;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  color: var(--contact-label);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1px solid var(--contact-border);
+  border-radius: 0.55rem;
+  background: #fff;
+  color: var(--contact-ink);
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-size: 0.86rem;
+  line-height: 1.35;
+  outline: none;
+  transition:
+    border-color 220ms var(--contact-ease),
+    box-shadow 220ms var(--contact-ease);
+}
+
+.input {
+  min-height: 2.45rem;
+  padding: 0.55rem 0.75rem;
+}
+
+.textarea {
+  min-height: 5.4rem;
+  padding: 0.65rem 0.75rem;
+  resize: vertical;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #9ca3af;
+}
+
+.input:focus,
+.textarea:focus,
+.phoneControl:focus-within {
+  border-color: var(--contact-accent);
+  box-shadow: 0 0 0 3px rgba(90, 21, 40, 0.12);
+}
+
+.inputError,
+.textarea.inputError,
+.phoneControl.inputError {
+  border-color: #b42318;
+}
+
+.phoneControl {
+  display: flex;
+  align-items: stretch;
+  min-height: 2.45rem;
+  overflow: hidden;
+  border: 1px solid var(--contact-border);
+  border-radius: 0.55rem;
+  background: #fff;
+  transition:
+    border-color 220ms var(--contact-ease),
+    box-shadow 220ms var(--contact-ease);
+}
+
+.phonePrefix {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.7rem;
+  border-right: 1px solid var(--contact-border);
+  background: #fafafa;
+  white-space: nowrap;
+}
+
+.flag {
+  display: block;
+  width: 1.25rem;
+  height: 0.85rem;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(10, 10, 10, 0.08);
+}
+
+.dialCode {
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 0.84rem;
+  color: var(--contact-ink);
+}
+
+.phoneInput {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0.55rem 0.75rem;
+  color: var(--contact-ink);
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-size: 0.86rem;
+  outline: none;
+}
+
+.phoneInput::placeholder {
+  color: #9ca3af;
+}
+
+.error {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #b42318;
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  width: 100%;
+  margin-top: 0.2rem;
+  border: 0;
+  border-radius: 0.55rem;
+  background: var(--contact-accent);
+  color: #fff;
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition:
+    transform 220ms var(--contact-ease),
+    background-color 220ms var(--contact-ease),
+    opacity 220ms var(--contact-ease);
+}
+
+.submit:hover:not(:disabled) {
+  background: #4a1121;
+}
+
+.submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.submit:focus-visible {
+  outline: 2px solid var(--contact-accent);
+  outline-offset: 3px;
+}
+
+.status {
+  margin: 0.1rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: left;
+}
+
+.status p {
+  margin: 0;
+}
+
+.status p + p {
+  margin-top: 0.15rem;
+}
+
+.statusSuccess {
+  color: #027a48;
+}
+
+.statusError {
+  color: #b42318;
+}
+
+@media (min-width: 640px) {
+  .row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 768px) {
+  .content {
+    padding: 7.5rem 2.5rem 3rem 3.5rem;
+  }
+
+  .card {
+    width: 22.5rem;
+    max-width: 22.5rem;
+    padding: 1.85rem 1.6rem 1.65rem;
+  }
+
+  .heading {
+    font-size: 1.7rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .headerScrim {
+    height: 8.25rem;
+  }
+
+  .content {
+    padding: 7.75rem 3rem 3.25rem 4.5rem;
+  }
+
+  .card {
+    width: 23rem;
+    max-width: 23rem;
+    padding: 2rem 1.75rem 1.75rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .content {
+    align-items: flex-start;
+    padding-top: 6.5rem;
+  }
+
+  .card {
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .textarea,
+  .phoneControl,
+  .submit {
+    transition: none;
+  }
+}

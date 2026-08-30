@@ -89,6 +89,7 @@
                                 <th class="border-0">{{translate('messages.sl')}}</th>
                                 <th class="border-0">{{translate('messages.name')}}</th>
                                 <th class="border-0">{{translate('messages.email')}}</th>
+                                <th class="border-0">{{translate('messages.phone')}}</th>
                                 <th class="border-0">{{translate('messages.subject')}}</th>
                                 <th class="border-0">{{translate('messages.Seen/Unseen')}}</th>
                                 <th class="border-0">{{translate('messages.action')}}</th>
@@ -112,6 +113,11 @@
                                     <td class="text-center">
                                         <span class="font-size-sm text-body mr-3">
                                             {{$contact['email']}}
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="font-size-sm text-body mr-3">
+                                            {{ $contact['phone'] ?: translate('messages.N/A') }}
                                         </span>
                                     </td>
                                     <td class="text-center">

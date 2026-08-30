@@ -53,7 +53,7 @@ export const COMPANY_LINKS: readonly FooterLinkItem[] = [
   { label: 'About Us', href: '/about' },
   { label: 'Careers', href: '/#careers' },
   { label: 'Blog', href: '/#blog' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'Contact', href: '/contact-us' },
 ] as const;
 
 export const IMPORTANT_LINKS: readonly FooterLinkItem[] = [

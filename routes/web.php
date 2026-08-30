@@ -39,7 +39,8 @@ Route::get('/public/{path}', function (string $path) {
     }
 
     $full = realpath($base . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path));
-    if ($full === false || !str_starts_with($full, $base . DIRECTORY_SEPARATOR) || !is_file($full)) {
+    $rootPrefix = strtolower($base) . DIRECTORY_SEPARATOR;
+    if ($full === false || !str_starts_with(strtolower($full), $rootPrefix) || !is_file($full)) {
         abort(404);
     }
 
@@ -71,6 +72,43 @@ Route::get('/public/{path}', function (string $path) {
     ]);
 })->where('path', '.*');
 
+Route::get('/react-landing/{path}', function (string $path) {
+    $base = realpath(public_path('react-landing'));
+    if ($base === false) {
+        abort(404);
+    }
+
+    $full = realpath($base . DIRECTORY_SEPARATOR . str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path));
+    $rootPrefix = strtolower($base) . DIRECTORY_SEPARATOR;
+    if ($full === false || !str_starts_with(strtolower($full), $rootPrefix) || !is_file($full)) {
+        abort(404);
+    }
+
+    $extension = strtolower(pathinfo($full, PATHINFO_EXTENSION));
+    $mimeTypes = [
+        'css' => 'text/css',
+        'js' => 'application/javascript',
+        'mjs' => 'application/javascript',
+        'json' => 'application/json',
+        'map' => 'application/json',
+        'svg' => 'image/svg+xml',
+        'png' => 'image/png',
+        'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+        'ico' => 'image/x-icon',
+        'woff' => 'font/woff',
+        'woff2' => 'font/woff2',
+        'html' => 'text/html',
+        'txt' => 'text/plain',
+    ];
+
+    return response()->file($full, [
+        'Content-Type' => $mimeTypes[$extension] ?? 'application/octet-stream',
+    ]);
+})->where('path', '.*');
+
 Route::post('/subscribeToTopic', [FirebaseController::class, 'subscribeToTopic']);
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('about', 'HomeController@index')->name('landing.about');
@@ -78,7 +116,7 @@ Route::get('product-and-service', 'HomeController@index')->name('landing.product
 Route::get('lang/{locale}', 'HomeController@lang')->name('lang');
 Route::get('terms-and-conditions', 'HomeController@terms_and_conditions')->name('terms-and-conditions');
 Route::get('about-us', 'HomeController@about_us')->name('about-us');
-Route::get('contact-us', 'HomeController@contact_us')->name('contact-us');
+Route::get('contact-us', 'HomeController@index')->name('contact-us');
 Route::post('send-message', 'HomeController@send_message')->name('send-message');
 Route::get('privacy-policy', 'HomeController@privacy_policy')->name('privacy-policy');
 Route::get('cancelation', 'HomeController@cancelation')->name('cancelation');

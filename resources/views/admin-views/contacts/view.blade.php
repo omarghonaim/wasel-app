@@ -70,6 +70,10 @@
                                         <td>{{translate('messages.Email')}}:</td>
                                         <td><strong>{{$contact->email}}</strong></td>
                                     </tr>
+                                    <tr>
+                                        <td>{{translate('messages.phone_number')}}:</td>
+                                        <td><strong>{{ $contact->phone ?: translate('messages.N/A') }}</strong></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>

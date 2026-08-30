@@ -6,7 +6,7 @@ const NAV_LINKS = [
   { label: 'About Us', href: '/about' },
   { label: 'Product & Service', href: '/product-and-service' },
   { label: 'The Blog', href: '/#blog' },
-  { label: 'Contact Us', href: '/#contact' },
+  { label: 'Contact Us', href: '/contact-us' },
 ] as const;
 
 type HeaderProps = {

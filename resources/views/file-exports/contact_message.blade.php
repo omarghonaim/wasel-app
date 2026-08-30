@@ -19,6 +19,7 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
                 </tr>
             <tr>
                 <th>{{ translate('Search_Criteria') }}</th>
@@ -31,11 +32,13 @@
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
                 </tr>
         <tr>
             <th>{{ translate('sl') }}</th>
             <th>{{ translate('Name') }}</th>
             <th>{{ translate('Email') }}</th>
+            <th>{{ translate('Phone') }}</th>
             <th>{{ translate('Subject') }}</th>
             <th>{{ translate('Message') }}</th>
             <th>{{ translate('Reply') }}</th>
@@ -48,6 +51,7 @@
         <td>{{ $loop->index+1}}</td>
         <td>{{ $message->name }}</td>
         <td>{{ $message->email }}</td>
+        <td>{{ $message->phone ?? translate('messages.N/A') }}</td>
         <td>{{ $message->subject }}</td>
         <td>{{ $message->message }}</td>
         <td>{{ $message->reply ?? translate('messages.N/A') }}</td>

@@ -8,3 +8,19 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+interface WaselGoogleMaps {
+  maps?: {
+    Map: new (element: HTMLElement, options?: Record<string, unknown>) => {
+      setCenter: (center: { lat: number; lng: number }) => void;
+    };
+    Marker: new (options?: Record<string, unknown>) => unknown;
+    Size: new (width: number, height: number) => unknown;
+    Point: new (x: number, y: number) => unknown;
+  };
+}
+
+interface Window {
+  google?: WaselGoogleMaps;
+}
+

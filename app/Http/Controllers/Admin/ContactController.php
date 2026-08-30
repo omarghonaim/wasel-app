@@ -46,7 +46,8 @@ class ContactController extends Controller
                 foreach ($key as $value) {
                     $q->orWhere('name', 'like', "%{$value}%")
                     ->orWhere('subject', 'like', "%{$value}%")
-                    ->orWhere('email', 'like', "%{$value}%");
+                    ->orWhere('email', 'like', "%{$value}%")
+                    ->orWhere('phone', 'like', "%{$value}%");
                 }
             });
         })
@@ -64,7 +65,8 @@ class ContactController extends Controller
                 foreach ($key as $value) {
                     $q->orWhere('name', 'like', "%{$value}%")
                     ->orWhere('subject', 'like', "%{$value}%")
-                    ->orWhere('email', 'like', "%{$value}%");
+                    ->orWhere('email', 'like', "%{$value}%")
+                    ->orWhere('phone', 'like', "%{$value}%");
                 }
             });
         })

@@ -47,9 +47,8 @@ export function Home({ settings }: { settings: SiteSettings | null }) {
       <CategoriesSection />
       <JoinUsSection />
 
-      {/* Anchors for header links until later sections are built */}
+      {/* Anchor for header link until the blog section is built */}
       <section id="blog" className="sr-only" aria-hidden="true" />
-      <section id="contact" className="sr-only" aria-hidden="true" />
     </main>
   );
 }

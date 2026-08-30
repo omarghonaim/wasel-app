@@ -226,6 +226,11 @@ class HomeController extends Controller
 
     public function contact_us()
     {
+        $reactLanding = public_path('react-landing/index.html');
+        if (File::exists($reactLanding)) {
+            return $this->index();
+        }
+
         $config = Helpers::get_business_settings('landing_page');
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
@@ -280,6 +285,7 @@ class HomeController extends Controller
         $contact = new Contact;
         $contact->name = $request->name;
         $contact->email = $request->email;
+        $contact->phone = $request->phone;
         $contact->subject = $request->subject;
         $contact->message = $request->message;
         $contact->save();

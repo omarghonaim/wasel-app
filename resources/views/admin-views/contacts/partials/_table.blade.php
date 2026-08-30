@@ -16,6 +16,11 @@
         </span>
     </td>
     <td class="text-center">
+        <span class="font-size-sm text-body mr-3">
+            {{ $contact['phone'] ?: translate('messages.N/A') }}
+        </span>
+    </td>
+    <td class="text-center">
         <div class="font-size-sm text-body mr-3 white--space-initial max-w-180px mx-auto">
             {{Str::limit($contact['subject'],40,'...')}}
         </div>
