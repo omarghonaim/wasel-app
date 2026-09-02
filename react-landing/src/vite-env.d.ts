@@ -13,6 +13,7 @@ interface WaselGoogleMaps {
   maps?: {
     Map: new (element: HTMLElement, options?: Record<string, unknown>) => {
       setCenter: (center: { lat: number; lng: number }) => void;
+      panBy: (x: number, y: number) => void;
     };
     Marker: new (options?: Record<string, unknown>) => unknown;
     Size: new (width: number, height: number) => unknown;

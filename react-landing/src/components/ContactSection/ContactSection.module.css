@@ -23,20 +23,6 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-.headerScrim {
-  position: absolute;
-  inset: 0 0 auto;
-  z-index: 2;
-  height: 7.5rem;
-  pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.58) 0%,
-    rgba(0, 0, 0, 0.28) 58%,
-    rgba(0, 0, 0, 0) 100%
-  );
-}
-
 .content {
   position: relative;
   z-index: 10;
@@ -47,7 +33,7 @@
   margin-inline: auto;
   align-items: center;
   justify-content: flex-start;
-  padding: 6.75rem 1.25rem 2.25rem;
+  padding: 2.25rem 1.25rem;
 }
 
 .card {
@@ -282,7 +268,7 @@
 
 @media (min-width: 768px) {
   .content {
-    padding: 7.5rem 2.5rem 3rem 3.5rem;
+    padding: 3rem 2.5rem 3rem 3.5rem;
   }
 
   .card {
@@ -297,12 +283,8 @@
 }
 
 @media (min-width: 1024px) {
-  .headerScrim {
-    height: 8.25rem;
-  }
-
   .content {
-    padding: 7.75rem 3rem 3.25rem 4.5rem;
+    padding: 3.25rem 3rem 3.25rem 4.5rem;
   }
 
   .card {
@@ -315,7 +297,7 @@
 @media (max-width: 639px) {
   .content {
     align-items: flex-start;
-    padding-top: 6.5rem;
+    padding-top: 1.75rem;
   }
 
   .card {

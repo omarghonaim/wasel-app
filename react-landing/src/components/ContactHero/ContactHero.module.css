@@ -1,0 +1,113 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow: hidden;
+  color: #fff;
+}
+
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center 42%;
+  background-repeat: no-repeat;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.62) 0%,
+      rgba(0, 0, 0, 0.22) 32%,
+      rgba(0, 0, 0, 0.18) 58%,
+      rgba(0, 0, 0, 0.48) 100%
+    ),
+    rgba(0, 0, 0, 0.18);
+}
+
+.content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  min-height: 100svh;
+  width: 100%;
+  max-width: var(--max-width-site, 1440px);
+  margin-inline: auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6.5rem 1.25rem 3.5rem;
+  text-align: center;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-display, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 800;
+  font-size: clamp(2.15rem, 8.5vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-align: center;
+}
+
+.description {
+  margin: 0.85rem 0 0;
+  max-width: min(22.75rem, calc(100vw - 2.5rem));
+  padding-inline: 0.25rem;
+  font-family: var(--font-sans, "Alexandria", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-align: center;
+  color: #fff;
+}
+
+@media (min-width: 481px) {
+  .description {
+    font-size: 18px;
+    line-height: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .background {
+    background-position: center center;
+  }
+
+  .content {
+    padding: 8rem 2rem 5rem;
+  }
+
+  .heading {
+    font-size: clamp(2.75rem, 5vw, 3.5rem);
+  }
+
+  .description {
+    margin-top: 1.125rem;
+    max-width: 36rem;
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .content {
+    padding: 8.5rem 2.5rem 5.5rem;
+  }
+
+  .heading {
+    font-size: 4.25rem;
+  }
+
+  .description {
+    max-width: 40.5rem;
+  }
+}

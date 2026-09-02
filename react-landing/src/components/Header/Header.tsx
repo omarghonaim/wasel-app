@@ -14,6 +14,7 @@ type HeaderProps = {
   businessName?: string | null;
   onDownloadApp?: () => void;
   activeHref?: string;
+  pinned?: boolean;
 };
 
 export function Header({
@@ -21,16 +22,23 @@ export function Header({
   businessName,
   onDownloadApp,
   activeHref,
+  pinned = false,
 }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const brand = businessName || 'Wasel';
+  const onLight = pinned;
 
   return (
     <motion.header
       initial={{ opacity: 0, y: -18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-      className="absolute inset-x-0 top-0 z-30"
+      className={[
+        'inset-x-0 top-0',
+        pinned
+          ? 'fixed z-50 border-b border-black/5 bg-white/95 backdrop-blur-md'
+          : 'absolute z-30',
+      ].join(' ')}
     >
       <div className="mx-auto flex h-20 w-full max-w-site items-center justify-between gap-4 px-5 md:px-8 lg:px-10">
         <a href="/#top" className="relative z-40 flex items-center gap-3">
@@ -41,7 +49,12 @@ export function Header({
               className="h-10 w-auto max-w-[9rem] object-contain object-left md:h-11"
             />
           ) : (
-            <span className="font-display text-xl font-bold tracking-tight text-surface">
+            <span
+              className={[
+                'font-display text-xl font-bold tracking-tight',
+                onLight ? 'text-ink' : 'text-surface',
+              ].join(' ')}
+            >
               {brand}
             </span>
           )}
@@ -59,9 +72,14 @@ export function Header({
                 href={link.href}
                 aria-current={isActive ? 'page' : undefined}
                 className={[
-                  'text-sm font-medium text-surface/95 transition-colors duration-200 hover:text-white',
+                  'text-sm font-medium transition-colors duration-200',
+                  onLight
+                    ? 'text-ink/80 hover:text-ink'
+                    : 'text-surface/95 hover:text-white',
                   isActive
-                    ? 'underline decoration-white decoration-1 underline-offset-[6px]'
+                    ? onLight
+                      ? 'underline decoration-burgundy decoration-1 underline-offset-[6px]'
+                      : 'underline decoration-white decoration-1 underline-offset-[6px]'
                     : '',
                 ]
                   .filter(Boolean)
@@ -74,14 +92,23 @@ export function Header({
         </nav>
 
         <div className="hidden lg:block">
-          <Button variant="primary" onClick={onDownloadApp}>
+          <Button
+            variant="primary"
+            className={onLight ? 'bg-burgundy text-white hover:bg-burgundy/90' : ''}
+            onClick={onDownloadApp}
+          >
             Download App
           </Button>
         </div>
 
         <button
           type="button"
-          className="relative z-40 inline-flex h-11 w-11 items-center justify-center rounded-full border border-surface/40 text-surface lg:hidden"
+          className={[
+            'relative z-40 inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden',
+            onLight
+              ? 'border border-ink/20 text-ink'
+              : 'border border-surface/40 text-surface',
+          ].join(' ')}
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
@@ -119,7 +146,12 @@ export function Header({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25 }}
-            className="absolute inset-x-0 top-20 border-t border-white/10 bg-black/85 px-5 py-6 backdrop-blur-md lg:hidden"
+            className={[
+              'absolute inset-x-0 top-20 border-t px-5 py-6 backdrop-blur-md lg:hidden',
+              onLight
+                ? 'border-black/5 bg-white/95'
+                : 'border-white/10 bg-black/85',
+            ].join(' ')}
           >
             <nav className="mx-auto flex max-w-site flex-col gap-4" aria-label="Mobile">
               {NAV_LINKS.map((link) => {
@@ -130,9 +162,12 @@ export function Header({
                     href={link.href}
                     aria-current={isActive ? 'page' : undefined}
                     className={[
-                      'py-1 text-base font-medium text-surface',
+                      'py-1 text-base font-medium',
+                      onLight ? 'text-ink' : 'text-surface',
                       isActive
-                        ? 'underline decoration-white decoration-1 underline-offset-[6px]'
+                        ? onLight
+                          ? 'underline decoration-burgundy decoration-1 underline-offset-[6px]'
+                          : 'underline decoration-white decoration-1 underline-offset-[6px]'
                         : '',
                     ]
                       .filter(Boolean)
@@ -146,7 +181,7 @@ export function Header({
               <Button
                 variant="primary"
                 fullWidth
-                className="mt-2"
+                className={onLight ? 'mt-2 bg-burgundy text-white hover:bg-burgundy/90' : 'mt-2'}
                 onClick={() => {
                   setMenuOpen(false);
                   onDownloadApp?.();

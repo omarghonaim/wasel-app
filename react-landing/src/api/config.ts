@@ -21,7 +21,8 @@ type ConfigApiResponse = {
 const CONFIG_ENDPOINT =
   import.meta.env.VITE_CONFIG_ENDPOINT || '/api/v1/config';
 
-const DOHA_CENTER: MapCenter = { lat: 25.2854, lng: 51.531 };
+/** 7GRR+9MJ, Al Corniche, Doha, Qatar */
+const DOHA_CENTER: MapCenter = { lat: 25.2909625, lng: 51.541640625 };
 
 function resolveLogoUrl(data: ConfigApiResponse): string | null {
   if (data.logo_full_url) return data.logo_full_url;

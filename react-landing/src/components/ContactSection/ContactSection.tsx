@@ -2,8 +2,6 @@ import { useState, type FormEvent, type ChangeEvent } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ApiRequestError } from '@/api/client';
 import { sendContactMessage } from '@/api/contact';
-import { Header } from '@/components/Header';
-import type { MapCenter } from '@/types/settings';
 import { ContactMap } from './ContactMap';
 import styles from './ContactSection.module.css';
 
@@ -81,20 +79,10 @@ function validate(values: FormValues): FormErrors {
 }
 
 type ContactSectionProps = {
-  logo: string | null;
-  businessName?: string | null;
-  onDownloadApp?: () => void;
   mapApiKey: string | null;
-  mapCenter: MapCenter | null;
 };
 
-export function ContactSection({
-  logo,
-  businessName,
-  onDownloadApp,
-  mapApiKey,
-  mapCenter,
-}: ContactSectionProps) {
+export function ContactSection({ mapApiKey }: ContactSectionProps) {
   const reduceMotion = useReducedMotion();
   const [values, setValues] = useState<FormValues>(EMPTY_VALUES);
   const [errors, setErrors] = useState<FormErrors>({});
@@ -164,16 +152,8 @@ export function ContactSection({
 
   return (
     <section className={styles.section} aria-labelledby="contact-heading">
-      <ContactMap apiKey={mapApiKey} center={mapCenter} />
+      <ContactMap apiKey={mapApiKey} />
       <div className={styles.mapVeil} />
-      <div className={styles.headerScrim} />
-
-      <Header
-        logo={logo}
-        businessName={businessName}
-        onDownloadApp={onDownloadApp}
-        activeHref="/contact-us"
-      />
 
       <div className={styles.content}>
         <motion.div

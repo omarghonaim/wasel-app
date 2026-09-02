@@ -1,3 +1,5 @@
+import { ContactHero } from '@/components/ContactHero';
+import { ContactInformationSection } from '@/components/ContactInformationSection';
 import { ContactSection } from '@/components/ContactSection';
 import type { SiteSettings } from '@/types/settings';
 
@@ -13,13 +15,13 @@ export function Contact({ settings }: { settings: SiteSettings | null }) {
 
   return (
     <main className="wasel-contact-page">
-      <ContactSection
+      <ContactHero
         logo={settings?.logo ?? null}
         businessName={settings?.businessName}
         onDownloadApp={handleDownloadApp}
-        mapApiKey={settings?.mapApiKey ?? null}
-        mapCenter={settings?.mapCenter ?? null}
       />
+      <ContactInformationSection />
+      <ContactSection mapApiKey={settings?.mapApiKey ?? null} />
     </main>
   );
 }
