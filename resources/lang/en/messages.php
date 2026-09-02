@@ -9099,4 +9099,5 @@ Smartly or Earn. ',
   'Send_Mail' => 'Send Mail',
   'Configure_your_mail_setup_first' => 'Configure your mail setup first',
   'Mail_Body' => 'Mail Body',
+  'digital_payment_for_the_order_not_available_at_this_time' => 'Digital payment for the order not available at this time',
 );
