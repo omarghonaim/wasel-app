@@ -51,6 +51,7 @@ export function HowWaselWorks() {
         </motion.header>
 
         <div className={styles.stepsWrap}>
+          {/* Desktop horizontal connector — unchanged */}
           <img
             src={`${ASSET}/process-connector.svg`}
             alt=""
@@ -59,6 +60,27 @@ export function HowWaselWorks() {
             height={42}
             aria-hidden="true"
           />
+
+          {/* Mobile vertical timeline — hidden from md+ */}
+          <svg
+            className={styles.mobileTimeline}
+            width="22"
+            height="380"
+            viewBox="0 0 22 380"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+            preserveAspectRatio="none"
+          >
+            <path
+              opacity="0.3"
+              d="M0.986088 0.166503C22.3249 126.495 26.5883 252.823 13.7762 379.152"
+              stroke="#740D20"
+              strokeWidth="2"
+              strokeDasharray="11 11"
+            />
+          </svg>
+
           <ol className={styles.steps}>
             {STEPS.map((step) => (
               <ProcessStep

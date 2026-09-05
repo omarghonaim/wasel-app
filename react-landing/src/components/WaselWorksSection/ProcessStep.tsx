@@ -24,8 +24,10 @@ export function ProcessStep({
           height={iconClassName ? 37 : 40}
         />
       </div>
-      <h3 className={styles.stepTitle}>{title}</h3>
-      <p className={styles.stepDescription}>{description}</p>
+      <div className={styles.stepContent}>
+        <h3 className={styles.stepTitle}>{title}</h3>
+        <p className={styles.stepDescription}>{description}</p>
+      </div>
     </li>
   );
 }

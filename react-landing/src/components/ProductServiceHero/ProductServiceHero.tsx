@@ -1,9 +1,11 @@
+import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Header } from '@/components/Header';
 import styles from './ProductServiceHero.module.css';
 
 const HERO_IMAGE =
   '/assets/landing/img/react_assets/product-service/product-img.jpg';
+const MOBILE_MAX_WIDTH = 767;
 
 const DESCRIPTION =
   'We reflects the rhythm of life in Qatar with understanding the importance of trust, speed, Quality, and service — values that shape every delivery we make.';
@@ -20,14 +22,40 @@ export function ProductServiceHero({
   onDownloadApp,
 }: ProductServiceHeroProps) {
   const reduceMotion = useReducedMotion();
+  const heroRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+
+    const update = () => {
+      setIsMobile(el.clientWidth <= MOBILE_MAX_WIDTH);
+    };
+
+    update();
+
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <section className={styles.hero} aria-labelledby="product-service-heading">
-      <div
-        className={styles.background}
-        style={{ backgroundImage: `url("${HERO_IMAGE}")` }}
-        aria-hidden="true"
-      />
+    <section
+      ref={heroRef}
+      className={styles.hero}
+      aria-labelledby="product-service-heading"
+      data-product-hero-mobile={isMobile ? 'true' : 'false'}
+    >
+      <div className={styles.background} aria-hidden="true">
+        <img
+          src={HERO_IMAGE}
+          alt=""
+          className={styles.backgroundImage}
+          decoding="async"
+          fetchPriority="high"
+        />
+      </div>
       <div className={styles.overlay} aria-hidden="true" />
 
       <Header

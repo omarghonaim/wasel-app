@@ -3,6 +3,8 @@ import { memo } from 'react';
 export type FooterLinkItem = {
   label: string;
   href: string;
+  /** Hide this link below the md breakpoint (mobile footer). */
+  hideOnMobile?: boolean;
 };
 
 type FooterLinksProps = {
@@ -33,12 +35,15 @@ export const FooterLinks = memo(function FooterLinks({
       </h3>
       <ul
         className={[
-          'mt-4 flex flex-col gap-3 sm:mt-5 sm:gap-3.5',
+          'mt-2.5 flex flex-col gap-2 md:mt-5 md:gap-3.5',
           align === 'center' ? 'items-center text-center' : 'items-start text-left',
         ].join(' ')}
       >
         {links.map((link) => (
-          <li key={link.href + link.label}>
+          <li
+            key={link.href + link.label}
+            className={link.hideOnMobile ? 'max-md:hidden' : undefined}
+          >
             <a href={link.href} className={linkClass}>
               {link.label}
             </a>
@@ -53,13 +58,17 @@ export const COMPANY_LINKS: readonly FooterLinkItem[] = [
   { label: 'About Us', href: '/about' },
   { label: 'Careers', href: '/#careers' },
   { label: 'Blog', href: '/#blog' },
-  { label: 'Contact', href: '/contact-us' },
+  { label: 'Contact', href: '/contact-us', hideOnMobile: true },
 ] as const;
 
-export const IMPORTANT_LINKS: readonly FooterLinkItem[] = [
-  { label: 'Partner with Us', href: '/#join-us' },
+/** Partner column links (mobile design reference). */
+export const PARTNER_LINKS: readonly FooterLinkItem[] = [
   { label: 'Become a Driver', href: '/#join-us' },
+  { label: 'Vendor Login', href: '/login/vendor' },
 ] as const;
+
+/** Alias kept for any existing imports. */
+export const IMPORTANT_LINKS = PARTNER_LINKS;
 
 export const LEGAL_LINKS: readonly FooterLinkItem[] = [
   { label: 'Privacy Policy', href: '/privacy-policy' },

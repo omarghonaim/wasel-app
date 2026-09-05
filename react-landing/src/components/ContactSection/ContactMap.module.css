@@ -57,8 +57,18 @@
   }
 }
 
+/* Mobile: pin sits in the map area above the form card */
 @media (max-width: 767px) {
   .pin {
-    width: 3.4rem;
+    top: 18%;
+    left: 50%;
+    width: 3.75rem;
+    transform: translate(-50%, -50%);
+  }
+
+  .embed {
+    /* Bias map so location reads in the upper band above the card */
+    height: 118%;
+    top: -6%;
   }
 }

@@ -1,8 +1,11 @@
+import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Header } from '@/components/Header';
 import styles from './AboutHero.module.css';
 
-const HERO_IMAGE = '/assets/landing/img/react_assets/About/aboutus-img.png';
+const HERO_IMAGE_DESKTOP = '/assets/landing/img/react_assets/About/aboutus-img.png';
+const HERO_IMAGE_MOBILE = '/assets/landing/img/react_assets/About/video-bg.png';
+const MOBILE_MAX_WIDTH = 767;
 
 const DESCRIPTION =
   'We are more than a delivery service. We are a trusted partner helping customers, brands, and drivers move forward.';
@@ -15,14 +18,44 @@ type AboutHeroProps = {
 
 export function AboutHero({ logo, businessName, onDownloadApp }: AboutHeroProps) {
   const reduceMotion = useReducedMotion();
+  const heroRef = useRef<HTMLElement>(null);
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+
+    const update = () => {
+      // Use the hero's own width (works in device frames / iframes)
+      setIsMobile(el.clientWidth <= MOBILE_MAX_WIDTH);
+    };
+
+    update();
+
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const backgroundSrc = isMobile ? HERO_IMAGE_MOBILE : HERO_IMAGE_DESKTOP;
 
   return (
-    <section className={styles.hero} aria-labelledby="about-us-heading">
-      <div
-        className={styles.background}
-        style={{ backgroundImage: `url(${HERO_IMAGE})` }}
-        aria-hidden="true"
-      />
+    <section
+      ref={heroRef}
+      className={styles.hero}
+      aria-labelledby="about-us-heading"
+      data-about-hero-mobile={isMobile ? 'true' : 'false'}
+    >
+      <div className={styles.background} aria-hidden="true">
+        <img
+          key={backgroundSrc}
+          src={backgroundSrc}
+          alt=""
+          className={styles.backgroundImage}
+          decoding="async"
+          fetchPriority="high"
+        />
+      </div>
       <div className={styles.overlay} aria-hidden="true" />
 
       <Header

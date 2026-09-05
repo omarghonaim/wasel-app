@@ -23,29 +23,32 @@ export function DownloadAppSection({
         />
 
         <div className={styles.inner}>
-          <h2 id="download-app-heading" className={styles.heading}>
-            <span className={styles.headingLight}>
-              Ready to
-              <br />
-              Experience
-            </span>
-            <span className={styles.headingBold}>
-              Smarter
-              <br />
-              Delivery?
-            </span>
-          </h2>
+          {/* Mobile: flex row. Desktop (md+): display:contents → same 3-col grid as before */}
+          <div className={styles.heroRow}>
+            <h2 id="download-app-heading" className={styles.heading}>
+              <span className={styles.headingLight}>
+                Ready to
+                <br />
+                Experience
+              </span>
+              <span className={styles.headingBold}>
+                Smarter
+                <br />
+                Delivery?
+              </span>
+            </h2>
 
-          <div className={styles.phoneWrap}>
-            <img
-              src={DOWNLOAD_ASSETS.phone}
-              alt="Wasel mobile app"
-              className={styles.phone}
-              width={768}
-              height={857}
-              loading="lazy"
-              decoding="async"
-            />
+            <div className={styles.phoneWrap}>
+              <img
+                src={DOWNLOAD_ASSETS.phone}
+                alt="Wasel mobile app"
+                className={styles.phone}
+                width={768}
+                height={857}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           </div>
 
           <DownloadLinks

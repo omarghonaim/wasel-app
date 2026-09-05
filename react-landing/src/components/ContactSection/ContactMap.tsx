@@ -9,6 +9,9 @@ const MAP_ZOOM = 18;
 const PIN_SRC = `${import.meta.env.BASE_URL}wasel-map-pin.svg`;
 const PIN_WIDTH = 64;
 const PIN_HEIGHT = 73;
+const MOBILE_MAX_WIDTH = 767;
+/** Shift map south on mobile so the pin sits in the upper band above the form */
+const MOBILE_LAT_OFFSET = -0.00115;
 const GOOGLE_EMBED_SRC =
   'https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d650!2d51.541640625!3d25.2909625!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sqa';
 
@@ -16,8 +19,21 @@ type ContactMapProps = {
   apiKey: string | null;
 };
 
+function mapCenterForViewport(): MapCenter {
+  if (typeof window !== 'undefined' && window.innerWidth <= MOBILE_MAX_WIDTH) {
+    return {
+      lat: OFFICE_LOCATION.lat + MOBILE_LAT_OFFSET,
+      lng: OFFICE_LOCATION.lng,
+    };
+  }
+  return OFFICE_LOCATION;
+}
+
 export function ContactMap({ apiKey }: ContactMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<{ setCenter: (center: MapCenter) => void } | null>(
+    null,
+  );
   const [engine, setEngine] = useState<'js' | 'embed'>('embed');
 
   useEffect(() => {
@@ -37,7 +53,7 @@ export function ContactMap({ apiKey }: ContactMapProps) {
         }
 
         const map = new maps.Map(mapRef.current, {
-          center: OFFICE_LOCATION,
+          center: mapCenterForViewport(),
           zoom: MAP_ZOOM,
           disableDefaultUI: true,
           keyboardShortcuts: false,
@@ -45,6 +61,7 @@ export function ContactMap({ apiKey }: ContactMapProps) {
           gestureHandling: 'none',
           backgroundColor: '#e8eaed',
         });
+        mapInstanceRef.current = map;
 
         new maps.Marker({
           map,
@@ -65,8 +82,21 @@ export function ContactMap({ apiKey }: ContactMapProps) {
 
     return () => {
       cancelled = true;
+      mapInstanceRef.current = null;
     };
   }, [apiKey]);
+
+  useEffect(() => {
+    if (engine !== 'js') return;
+
+    const syncCenter = () => {
+      mapInstanceRef.current?.setCenter(mapCenterForViewport());
+    };
+
+    syncCenter();
+    window.addEventListener('resize', syncCenter);
+    return () => window.removeEventListener('resize', syncCenter);
+  }, [engine]);
 
   return (
     <div className={styles.layer} aria-hidden="true">

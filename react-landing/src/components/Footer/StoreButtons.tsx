@@ -14,7 +14,8 @@ type StoreButtonsProps = {
 const storeButtonClass =
   'inline-block transition-[transform,box-shadow] duration-300 ease-out will-change-transform hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_10px_24px_rgba(0,0,0,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/70';
 
-const storeImageClass = 'h-10 w-auto sm:h-11';
+/** Compact on mobile to match footer design; restore larger badges from md up. */
+const storeImageClass = 'h-8 w-auto md:h-11';
 
 export const StoreButtons = memo(function StoreButtons({
   appUrlIos,
@@ -26,7 +27,7 @@ export const StoreButtons = memo(function StoreButtons({
 
   return (
     <div
-      className={['flex flex-wrap items-center justify-center gap-3 sm:justify-start sm:gap-3.5', className]
+      className={['flex flex-wrap items-center justify-start gap-2.5 md:gap-3.5', className]
         .filter(Boolean)
         .join(' ')}
     >

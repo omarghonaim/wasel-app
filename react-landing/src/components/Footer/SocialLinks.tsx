@@ -21,7 +21,7 @@ type SocialLinksProps = {
   className?: string;
 };
 
-const iconClass = 'h-[1.05rem] w-[1.05rem] sm:h-[1.1rem] sm:w-[1.1rem]';
+const iconClass = 'h-4 w-4 md:h-[1.1rem] md:w-[1.1rem]';
 
 export const SocialLinks = memo(function SocialLinks({
   links = {},
@@ -39,7 +39,7 @@ export const SocialLinks = memo(function SocialLinks({
 
   return (
     <ul
-      className={['flex items-center justify-center gap-5 sm:justify-start sm:gap-6', className]
+      className={['flex items-center justify-start gap-4 md:gap-6', className]
         .filter(Boolean)
         .join(' ')}
       aria-label="Social media"

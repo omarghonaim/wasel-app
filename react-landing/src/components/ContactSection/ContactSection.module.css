@@ -260,12 +260,6 @@
   color: #b42318;
 }
 
-@media (min-width: 640px) {
-  .row {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
 @media (min-width: 768px) {
   .content {
     padding: 3rem 2.5rem 3rem 3.5rem;
@@ -279,6 +273,10 @@
 
   .heading {
     font-size: 1.7rem;
+  }
+
+  .row {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -294,14 +292,96 @@
   }
 }
 
-@media (max-width: 639px) {
+/* ─── Mobile contact form (match design) ─── */
+@media (max-width: 767px) {
+  .section {
+    --contact-accent: #740d20;
+    --contact-eyebrow: #b59a7a;
+  }
+
   .content {
     align-items: flex-start;
-    padding-top: 1.75rem;
+    justify-content: center;
+    /* Leave room above for map + pin */
+    min-height: 100svh;
+    padding: 6.75rem 1.15rem 1.5rem;
   }
 
   .card {
-    max-width: none;
+    width: 100%;
+    max-width: 26rem;
+    margin-inline: auto;
+    padding: 1.5rem 1.25rem 1.35rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 14px 40px rgba(20, 12, 16, 0.14);
+  }
+
+  .eyebrow {
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+  }
+
+  .heading {
+    margin-top: 0.35rem;
+    font-size: 1.4rem;
+  }
+
+  .form {
+    gap: 0.95rem;
+    margin-top: 1.2rem;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 0.95rem;
+  }
+
+  .field {
+    gap: 0.4rem;
+  }
+
+  .label {
+    font-size: 0.8125rem;
+  }
+
+  .input,
+  .textarea,
+  .phoneControl {
+    border-radius: 0.75rem;
+  }
+
+  .input,
+  .phoneControl {
+    min-height: 2.65rem;
+  }
+
+  .input {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.875rem;
+  }
+
+  .textarea {
+    min-height: 5.75rem;
+    padding: 0.7rem 0.85rem;
+    font-size: 0.875rem;
+  }
+
+  .phonePrefix {
+    gap: 0.45rem;
+    padding: 0 0.75rem;
+    background: #fff;
+  }
+
+  .phoneInput {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.875rem;
+  }
+
+  .submit {
+    min-height: 2.75rem;
+    margin-top: 0.15rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
   }
 }
 
