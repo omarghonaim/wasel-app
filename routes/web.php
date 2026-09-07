@@ -29,6 +29,27 @@ use Illuminate\Support\Facades\Http;
 |
 */
 
+// Google Search Console HTML file verification. Must be reachable at
+// https://yourdomain.com/google….html with no redirect, even when the
+// document root is the project folder and all requests hit Laravel.
+Route::get('/google{token}.html', function (string $token) {
+    $candidates = [
+        public_path('google' . $token . '.html'),
+        base_path('google' . $token . '.html'),
+    ];
+
+    foreach ($candidates as $file) {
+        if (is_file($file)) {
+            return response(file_get_contents($file), 200, [
+                'Content-Type' => 'text/html; charset=UTF-8',
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            ]);
+        }
+    }
+
+    abort(404);
+})->where('token', '[A-Za-z0-9_-]+');
+
 // Views use asset('public/assets/...'), which only resolves when the
 // document root is the project root. With php artisan serve / public
 // as docroot, map /public/* back to real files under public/.
